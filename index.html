@@ -14,6 +14,14 @@
       --accent-2: #1d4ed8;
       --danger: #b91c1c;
       --radius: 14px;
+      --ok-bg: #ecfdf3;
+      --ok-fg: #166534;
+      --warn-bg: #fff7ed;
+      --warn-fg: #9a3412;
+      --over-bg: #fef2f2;
+      --over-fg: #991b1b;
+      --neutral-bg: #f8fafc;
+      --neutral-fg: #334155;
     }
 
     * {
@@ -26,54 +34,59 @@
       color: var(--text);
       font-family: "Segoe UI", Tahoma, sans-serif;
       background: linear-gradient(170deg, #e7effa, #f8fbff 45%, #e9fbfb);
+      overflow-x: hidden;
     }
 
     .app {
       width: 100%;
-      max-width: 760px;
+      max-width: 860px;
       margin: 0 auto;
-      padding: 14px;
+      padding: 8px 6px;
       display: grid;
-      gap: 12px;
+      gap: 8px;
     }
 
     .panel {
-      background: var(--panel);
+      background: #fff;
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 14px;
+      padding: 8px;
       box-shadow: 0 8px 22px rgba(2, 6, 23, 0.08);
     }
 
     h1,
     h2,
     h3 {
-      margin: 0 0 8px;
+      margin: 0 0 6px;
       line-height: 1.2;
     }
 
     .muted {
       margin: 0;
       color: var(--muted);
-      font-size: 13px;
+      font-size: 12px;
     }
 
     .form-grid {
-      margin-top: 10px;
+      margin-top: 6px;
       display: grid;
-      gap: 8px;
+      gap: 6px;
     }
 
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
+      gap: 6px;
+    }
+
+    .span-2 {
+      grid-column: 1 / -1;
     }
 
     label {
       display: grid;
-      gap: 5px;
-      font-size: 13px;
+      gap: 3px;
+      font-size: 12px;
       font-weight: 700;
       color: #334155;
       min-width: 0;
@@ -82,39 +95,44 @@
     input,
     textarea {
       width: 100%;
-      min-height: 46px;
+      min-height: 38px;
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 12px;
+      border-radius: 8px;
+      padding: 7px 9px;
       font: inherit;
       color: var(--text);
       background: #fff;
     }
 
+    #employeeCode,
+    #editEmployeeCode {
+      text-transform: uppercase;
+    }
+
     textarea {
       resize: none;
       line-height: 1.35;
-      min-height: 52px;
+      min-height: 42px;
       overflow: hidden;
     }
 
     .actions {
-      margin-top: 10px;
+      margin-top: 6px;
       display: grid;
-      gap: 8px;
+      gap: 6px;
       grid-template-columns: 1fr 1fr;
     }
 
     button {
-      min-height: 46px;
+      min-height: 38px;
       border: 0;
-      border-radius: 10px;
+      border-radius: 8px;
       font: inherit;
       font-weight: 700;
       color: #fff;
       background: var(--accent);
       cursor: pointer;
-      padding: 10px 12px;
+      padding: 7px 9px;
     }
 
     button.secondary {
@@ -130,21 +148,77 @@
     }
 
     .summary {
+      margin-top: 2px;
+      font-size: 14px;
+    }
+
+    .time-strip {
+      margin-top: 2px;
+      border: 1px solid #bfdbfe;
+      background: #eff6ff;
+      border-radius: 8px;
+      padding: 6px;
+    }
+
+    .time-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .time-grid-3 label {
+      font-size: 11px;
+      gap: 2px;
+    }
+
+    .hour-check {
       margin-top: 6px;
-      font-size: 15px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      padding: 7px 8px;
+      display: grid;
+      gap: 2px;
+      font-size: 12px;
+    }
+
+    .hour-check strong {
+      font-size: 13px;
+    }
+
+    .hour-check.neutral {
+      background: var(--neutral-bg);
+      color: var(--neutral-fg);
+    }
+
+    .hour-check.ok {
+      background: var(--ok-bg);
+      color: var(--ok-fg);
+      border-color: #86efac;
+    }
+
+    .hour-check.warn {
+      background: var(--warn-bg);
+      color: var(--warn-fg);
+      border-color: #fdba74;
+    }
+
+    .hour-check.over {
+      background: var(--over-bg);
+      color: var(--over-fg);
+      border-color: #fca5a5;
     }
 
     .entry-list {
-      margin-top: 8px;
+      margin-top: 6px;
       display: grid;
-      gap: 7px;
+      gap: 5px;
     }
 
     .empty {
       border: 1px dashed var(--border);
-      border-radius: 10px;
-      padding: 12px;
-      font-size: 14px;
+      border-radius: 8px;
+      padding: 9px;
+      font-size: 12px;
       color: var(--muted);
       text-align: center;
       background: #fbfdff;
@@ -152,16 +226,16 @@
 
     .entry-card {
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 8px 10px;
+      border-radius: 8px;
+      padding: 6px 7px;
       background: #fcfdff;
       display: grid;
-      gap: 5px;
+      gap: 4px;
     }
 
     .entry-meta {
       color: var(--muted);
-      font-size: 12px;
+      font-size: 11px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -170,26 +244,38 @@
     .entry-main {
       display: grid;
       grid-template-columns: auto 1fr auto;
-      gap: 8px;
+      gap: 6px;
       align-items: center;
     }
 
     .entry-hours {
       font-weight: 800;
-      font-size: 14px;
+      font-size: 13px;
       white-space: nowrap;
     }
 
     .entry-activity {
-      font-size: 14px;
+      font-size: 13px;
       word-break: break-word;
     }
 
+    .entry-actions {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .entry-edit,
     .entry-delete {
-      min-height: 30px;
-      padding: 4px 8px;
-      font-size: 12px;
-      border-radius: 8px;
+      min-height: 26px;
+      padding: 3px 6px;
+      font-size: 11px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .entry-edit {
+      background: var(--accent-2);
     }
 
     .dialog-backdrop {
@@ -231,6 +317,51 @@
       border: 1px solid var(--border);
     }
 
+    .dialog button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .export-dialog {
+      width: min(100%, 640px);
+    }
+
+    .export-scope {
+      grid-template-columns: 1fr 1fr;
+      margin-top: 6px;
+      margin-bottom: 4px;
+    }
+
+    .export-scope button.active-scope {
+      outline: 2px solid #0ea5e9;
+      outline-offset: 1px;
+    }
+
+    .export-label {
+      display: block;
+      margin-top: 4px;
+    }
+
+    .export-output {
+      width: 100%;
+      min-height: 150px;
+      margin-top: 4px;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 12px;
+      white-space: pre;
+      line-height: 1.3;
+    }
+
+    .export-meta {
+      margin-top: 6px;
+    }
+
+    .edit-dialog {
+      width: min(100%, 560px);
+      max-height: 86vh;
+      overflow: auto;
+    }
+
     @media (min-width: 880px) {
       .app {
         grid-template-columns: 1fr 1fr;
@@ -250,9 +381,23 @@
               <input id="date" type="date" required />
             </label>
 
-            <label>Mitarbeiterkuerzel
-              <input id="employeeCode" type="text" maxlength="20" required />
+            <label>Mitarbeiterkürzel
+              <input id="employeeCode" type="text" maxlength="20" autocomplete="off" autocapitalize="characters" spellcheck="false" required />
             </label>
+          </div>
+
+          <div class="time-strip">
+            <div class="time-grid-3">
+              <label>Anfangszeit
+                <input id="startTime" type="time" />
+              </label>
+              <label>Pause (Minuten)
+                <input id="breakMinutes" type="text" inputmode="decimal" placeholder="z. B. 30" value="0" />
+              </label>
+              <label>Endzeit
+                <input id="endTime" type="time" />
+              </label>
+            </div>
           </div>
 
           <div class="form-row">
@@ -265,76 +410,177 @@
             </label>
           </div>
 
-          <label>Stunden
-            <input id="hours" type="text" inputmode="decimal" placeholder="z. B. 7,5 oder 7.5" required />
+          <label>Tätigkeit
+            <textarea id="activity" rows="2" maxlength="500" required></textarea>
           </label>
 
-          <label>Taetigkeit
-            <textarea id="activity" rows="2" maxlength="400" required></textarea>
+          <label>Stunden (Komma/Punkt)
+            <input id="hours" type="text" inputmode="decimal" placeholder="z. B. 1,5 oder 1.5" required />
           </label>
         </div>
 
         <div class="actions">
           <button type="submit">Eintrag speichern</button>
           <button type="button" class="secondary" id="sendMail">E-Mail senden</button>
-          <button type="button" class="danger full" id="clearAll">Alle loeschen</button>
+          <button type="button" class="danger full" id="clearAll">Alle löschen</button>
         </div>
         <p id="formMessage" class="muted" aria-live="polite"></p>
       </form>
     </section>
 
     <section class="panel">
-      <h2>Eintraege</h2>
+      <h2>Einträge</h2>
       <p class="muted" id="viewInfo">Angezeigter Tag: -</p>
       <p class="summary">Gesamtstunden (Tag): <strong id="totalHours">0.00</strong></p>
+      <div id="hourCheck" class="hour-check neutral">
+        <strong id="hourCheckTitle">Stundenprüfung optional</strong>
+        <span id="hourCheckText">Für Soll-Ist-Abgleich Anfangszeit und Endzeit setzen.</span>
+      </div>
       <div id="entryList" class="entry-list"></div>
     </section>
   </main>
 
   <div id="exportDialog" class="dialog-backdrop" hidden>
-    <div class="dialog">
-      <h3>Exportieren</h3>
-      <p class="muted">Soll der gewaehlte Tag oder die Woche exportiert werden?</p>
+    <div class="dialog export-dialog">
+      <h3>Büro-Export</h3>
+      <p class="muted">Zeitraum wählen, dann Inhalt kopieren oder per Mail öffnen.</p>
+      <div class="dialog-actions export-scope">
+        <button id="exportDay" type="button">Tag</button>
+        <button id="exportWeek" type="button" class="secondary">Woche</button>
+      </div>
+      <label class="muted export-label">Exportinhalt (TSV, WaWi-freundlich)</label>
+      <textarea id="exportOutput" class="export-output" rows="9" readonly></textarea>
+      <p id="exportMeta" class="muted export-meta">Noch kein Export erzeugt.</p>
       <div class="dialog-actions">
-        <button id="exportDay" type="button">Tag exportieren</button>
-        <button id="exportWeek" type="button" class="secondary">Woche exportieren</button>
-        <button id="exportCancel" type="button" class="ghost">Abbrechen</button>
+        <button id="copyExport" type="button">Inhalt kopieren</button>
+        <button id="mailExport" type="button" class="secondary">E-Mail öffnen</button>
+        <button id="exportCancel" type="button" class="ghost">Schließen</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="editDialog" class="dialog-backdrop" hidden>
+    <div class="dialog edit-dialog">
+      <h3>Eintrag bearbeiten</h3>
+      <p class="muted">Änderungen speichern oder Eintrag löschen.</p>
+      <div class="form-grid">
+        <div class="form-row">
+          <label>Datum
+            <input id="editDate" type="date" required />
+          </label>
+          <label>Mitarbeiterkürzel
+            <input id="editEmployeeCode" type="text" maxlength="20" autocomplete="off" autocapitalize="characters" spellcheck="false" required />
+          </label>
+        </div>
+        <div class="form-row">
+          <label>Anfangszeit
+            <input id="editStartTime" type="time" />
+          </label>
+          <label>Endzeit
+            <input id="editEndTime" type="time" />
+          </label>
+        </div>
+        <div class="form-row">
+          <label>Pause (Minuten)
+            <input id="editBreakMinutes" type="text" inputmode="decimal" />
+          </label>
+          <label>Stunden
+            <input id="editHours" type="text" inputmode="decimal" required />
+          </label>
+        </div>
+        <div class="form-row">
+          <label>Kundenname
+            <input id="editCustomerName" type="text" maxlength="80" required />
+          </label>
+          <label>Projektnummer
+            <input id="editProjectNumber" type="text" maxlength="40" required />
+          </label>
+        </div>
+        <label>Tätigkeit
+          <textarea id="editActivity" rows="2" maxlength="500" required></textarea>
+        </label>
+      </div>
+      <div class="dialog-actions">
+        <button id="editSave" type="button">Änderungen speichern</button>
+        <button id="editDelete" type="button" class="danger">Eintrag löschen</button>
+        <button id="editCancel" type="button" class="ghost">Abbrechen</button>
       </div>
     </div>
   </div>
 
   <script>
-    const STORAGE_KEY = "time_entries_mail_v2";
+    const STORAGE_KEY = "time_entries_mail_v4";
+    const OFFICE_EMAIL = "info@roewekamp-stumpe.de";
 
     const form = document.getElementById("entryForm");
     const dateInput = document.getElementById("date");
     const employeeCodeInput = document.getElementById("employeeCode");
+    const startTimeInput = document.getElementById("startTime");
+    const endTimeInput = document.getElementById("endTime");
+    const breakMinutesInput = document.getElementById("breakMinutes");
+    const hoursInput = document.getElementById("hours");
     const customerNameInput = document.getElementById("customerName");
     const projectNumberInput = document.getElementById("projectNumber");
-    const hoursInput = document.getElementById("hours");
     const activityInput = document.getElementById("activity");
     const entryList = document.getElementById("entryList");
     const totalHoursLabel = document.getElementById("totalHours");
     const viewInfoLabel = document.getElementById("viewInfo");
     const formMessage = document.getElementById("formMessage");
+    const hourCheck = document.getElementById("hourCheck");
+    const hourCheckTitle = document.getElementById("hourCheckTitle");
+    const hourCheckText = document.getElementById("hourCheckText");
     const sendMailButton = document.getElementById("sendMail");
     const clearAllButton = document.getElementById("clearAll");
     const exportDialog = document.getElementById("exportDialog");
     const exportDayButton = document.getElementById("exportDay");
     const exportWeekButton = document.getElementById("exportWeek");
+    const exportOutput = document.getElementById("exportOutput");
+    const exportMeta = document.getElementById("exportMeta");
+    const copyExportButton = document.getElementById("copyExport");
+    const mailExportButton = document.getElementById("mailExport");
     const exportCancelButton = document.getElementById("exportCancel");
-
-    dateInput.value = getLocalDateISO();
+    const editDialog = document.getElementById("editDialog");
+    const editDateInput = document.getElementById("editDate");
+    const editEmployeeCodeInput = document.getElementById("editEmployeeCode");
+    const editStartTimeInput = document.getElementById("editStartTime");
+    const editEndTimeInput = document.getElementById("editEndTime");
+    const editBreakMinutesInput = document.getElementById("editBreakMinutes");
+    const editHoursInput = document.getElementById("editHours");
+    const editCustomerNameInput = document.getElementById("editCustomerName");
+    const editProjectNumberInput = document.getElementById("editProjectNumber");
+    const editActivityInput = document.getElementById("editActivity");
+    const editSaveButton = document.getElementById("editSave");
+    const editDeleteButton = document.getElementById("editDelete");
+    const editCancelButton = document.getElementById("editCancel");
 
     let inMemoryEntries = [];
     let localStorageEnabled = canUseLocalStorage();
     let storageFallbackHintShown = false;
+    let editingEntryId = null;
+    let exportScope = "day";
+    let currentExportText = "";
+    let currentExportSubject = "";
+
+    dateInput.value = getLocalDateISO();
+
     let entries = loadEntries();
+    hydrateInputsForDate();
 
     function getLocalDateISO() {
       const now = new Date();
       const offset = now.getTimezoneOffset() * 60000;
       return new Date(now.getTime() - offset).toISOString().slice(0, 10);
+    }
+
+    function canUseLocalStorage() {
+      try {
+        const testKey = "__time_tracker_test__";
+        localStorage.setItem(testKey, "1");
+        localStorage.removeItem(testKey);
+        return true;
+      } catch {
+        return false;
+      }
     }
 
     function loadEntries() {
@@ -358,21 +604,11 @@
           localStorageEnabled = false;
         }
       }
+
       inMemoryEntries = [...entries];
       if (!storageFallbackHintShown) {
         storageFallbackHintShown = true;
-        setFormMessage("Hinweis: WhatsApp-Ansicht blockiert Speichern. Bitte in Chrome/Samsung Internet oeffnen.", true);
-      }
-    }
-
-    function canUseLocalStorage() {
-      try {
-        const testKey = "__time_tracker_test__";
-        localStorage.setItem(testKey, "1");
-        localStorage.removeItem(testKey);
-        return true;
-      } catch {
-        return false;
+        setFormMessage("Hinweis: Speichern ist in dieser Ansicht eingeschränkt.", true);
       }
     }
 
@@ -387,50 +623,134 @@
       return Number(value).toFixed(2);
     }
 
-    function updateTotal(source) {
-      const total = source.reduce((sum, entry) => sum + Number(entry.hours), 0);
-      totalHoursLabel.textContent = fmtHours(total);
+    function setFormMessage(text, isError) {
+      formMessage.textContent = text || "";
+      formMessage.style.color = isError ? "#b91c1c" : "#64748b";
     }
 
-    function parseHours(rawValue) {
-      const normalized = String(rawValue).trim().replace(",", ".");
+    function parseDecimal(rawValue) {
+      const normalized = String(rawValue || "").trim().replace(",", ".");
       if (!/^\d+(\.\d+)?$/.test(normalized)) return NaN;
       return Number(normalized);
     }
 
-    function parseIsoDateLocal(iso) {
-      if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return null;
-      const [year, month, day] = iso.split("-").map(Number);
-      return new Date(year, month - 1, day);
+    function parseBreakMinutes(rawValue) {
+      const text = String(rawValue || "").trim();
+      if (text === "") return 0;
+      return parseDecimal(text);
     }
 
-    function toIsoDate(date) {
-      const year = date.getFullYear();
-      const month = leftPad2(date.getMonth() + 1);
-      const day = leftPad2(date.getDate());
-      return `${year}-${month}-${day}`;
+    function sanitizeEmployeeCode(rawValue) {
+      return String(rawValue || "")
+        .toUpperCase()
+        .replace(/[^A-ZÄÖÜ]/g, "");
     }
 
-    function leftPad2(value) {
-      const text = String(value);
-      return text.length < 2 ? `0${text}` : text;
+    function parseTimeToMinutes(value) {
+      if (!/^\d{2}:\d{2}$/.test(value || "")) return NaN;
+      const parts = value.split(":");
+      const hours = Number(parts[0]);
+      const minutes = Number(parts[1]);
+      if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) return NaN;
+      return hours * 60 + minutes;
     }
 
-    function rightPad(text, targetLength) {
-      let out = String(text);
-      while (out.length < targetLength) out += " ";
-      return out;
+    function normalizeTimeInputValue(rawValue) {
+      const raw = String(rawValue || "").trim().replace(/[.,]/g, ":").replace(/\s+/g, "");
+      if (raw === "") return "";
+
+      let h = NaN;
+      let m = NaN;
+
+      if (/^\d{1,2}:\d{1,2}$/.test(raw)) {
+        const parts = raw.split(":");
+        h = Number(parts[0]);
+        m = Number(parts[1]);
+      } else if (/^\d{3,4}$/.test(raw)) {
+        if (raw.length === 3) {
+          h = Number(raw.slice(0, 1));
+          m = Number(raw.slice(1));
+        } else {
+          h = Number(raw.slice(0, 2));
+          m = Number(raw.slice(2));
+        }
+      } else if (/^\d{1,2}$/.test(raw)) {
+        h = Number(raw);
+        m = 0;
+      } else {
+        return rawValue;
+      }
+
+      if (!Number.isFinite(h) || !Number.isFinite(m) || h < 0 || h > 23 || m < 0 || m > 59) {
+        return rawValue;
+      }
+
+      const hh = h < 10 ? `0${h}` : String(h);
+      const mm = m < 10 ? `0${m}` : String(m);
+      return `${hh}:${mm}`;
     }
 
-    function getWeekRangeIso(isoDate) {
-      const date = parseIsoDateLocal(isoDate);
-      if (!date) return null;
-      const dayIndex = (date.getDay() + 6) % 7;
-      const weekStart = new Date(date);
-      weekStart.setDate(date.getDate() - dayIndex);
-      const weekEnd = new Date(weekStart);
-      weekEnd.setDate(weekStart.getDate() + 6);
-      return { start: toIsoDate(weekStart), end: toIsoDate(weekEnd) };
+    function calcExpectedHours(startTime, endTime, breakMinutes) {
+      const start = parseTimeToMinutes(startTime);
+      const end = parseTimeToMinutes(endTime);
+      if (!Number.isFinite(start) || !Number.isFinite(end)) return NaN;
+      if (!Number.isFinite(breakMinutes) || breakMinutes < 0) return NaN;
+
+      const netMinutes = end - start - breakMinutes;
+      if (netMinutes < 0) return NaN;
+      return netMinutes / 60;
+    }
+
+    function validateEntry(entry) {
+      if (!entry.date || !entry.employeeCode || !entry.customerName || !entry.projectNumber || !entry.activity) {
+        return "Bitte alle Felder ausfüllen.";
+      }
+
+      if (!Number.isFinite(entry.breakMinutes) || entry.breakMinutes < 0) {
+        return "Pause bitte als gültige Zahl in Minuten eingeben.";
+      }
+
+      const hasStart = Boolean(entry.startTime);
+      const hasEnd = Boolean(entry.endTime);
+      if (hasStart !== hasEnd) {
+        return "Bitte Anfangszeit und Endzeit zusammen ausfüllen oder beide leer lassen.";
+      }
+
+      if (hasStart && hasEnd) {
+        const expectedHours = calcExpectedHours(entry.startTime, entry.endTime, entry.breakMinutes);
+        if (!Number.isFinite(expectedHours)) {
+          return "Anfangszeit, Endzeit und Pause sind nicht plausibel.";
+        }
+      }
+
+      if (!Number.isFinite(entry.hours) || entry.hours <= 0) {
+        return "Stunden bitte als Zahl eingeben (Komma oder Punkt erlaubt).";
+      }
+
+      return "";
+    }
+
+    function openEditDialog(entryId) {
+      const entry = entries.find((item) => item.id === entryId);
+      if (!entry) return;
+
+      editingEntryId = entry.id;
+      editDateInput.value = entry.date || "";
+      editEmployeeCodeInput.value = sanitizeEmployeeCode(entry.employeeCode || "");
+      editStartTimeInput.value = entry.startTime || "";
+      editEndTimeInput.value = entry.endTime || "";
+      editBreakMinutesInput.value = String(entry.breakMinutes ?? 0).replace(".", ",");
+      editHoursInput.value = String(entry.hours ?? "").replace(".", ",");
+      editCustomerNameInput.value = entry.customerName || "";
+      editProjectNumberInput.value = entry.projectNumber || "";
+      editActivityInput.value = entry.activity || "";
+      autoGrowTextarea(editActivityInput);
+      editDialog.hidden = false;
+    }
+
+    function closeEditDialog() {
+      editingEntryId = null;
+      editDialog.hidden = true;
     }
 
     function getEntriesForSelectedDay() {
@@ -448,9 +768,42 @@
       return entries.filter((entry) => entry.date === selectedDate);
     }
 
+    function parseIsoDateLocal(iso) {
+      if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return null;
+      const parts = iso.split("-").map(Number);
+      return new Date(parts[0], parts[1] - 1, parts[2]);
+    }
+
+    function leftPad2(value) {
+      const text = String(value);
+      return text.length < 2 ? `0${text}` : text;
+    }
+
+    function toIsoDate(date) {
+      const year = date.getFullYear();
+      const month = leftPad2(date.getMonth() + 1);
+      const day = leftPad2(date.getDate());
+      return `${year}-${month}-${day}`;
+    }
+
+    function getWeekRangeIso(isoDate) {
+      const date = parseIsoDateLocal(isoDate);
+      if (!date) return null;
+      const dayIndex = (date.getDay() + 6) % 7;
+      const weekStart = new Date(date);
+      weekStart.setDate(date.getDate() - dayIndex);
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekStart.getDate() + 6);
+      return { start: toIsoDate(weekStart), end: toIsoDate(weekEnd) };
+    }
+
+    function autoGrowTextarea(textarea) {
+      textarea.style.height = "auto";
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    }
+
     function autoGrowActivity() {
-      activityInput.style.height = "auto";
-      activityInput.style.height = `${activityInput.scrollHeight}px`;
+      autoGrowTextarea(activityInput);
     }
 
     function escapeHtml(text) {
@@ -462,20 +815,79 @@
         .replace(/'/g, "&#39;");
     }
 
-    function setFormMessage(text, isError) {
-      formMessage.textContent = text || "";
-      formMessage.style.color = isError ? "#b91c1c" : "#64748b";
+    function updateTotal(dayEntries) {
+      const total = dayEntries.reduce((sum, entry) => sum + Number(entry.hours), 0);
+      totalHoursLabel.textContent = fmtHours(total);
+      return total;
+    }
+
+    function setHourCheck(mode, title, text) {
+      hourCheck.className = `hour-check ${mode}`;
+      hourCheckTitle.textContent = title;
+      hourCheckText.textContent = text;
+    }
+
+    function updateHourCheck(dayEntries, enteredHours) {
+      const start = startTimeInput.value;
+      const end = endTimeInput.value;
+      const breakMinutes = parseBreakMinutes(breakMinutesInput.value);
+
+      if (!start && !end) {
+        setHourCheck("neutral", "Stundenprüfung optional", "Für Soll-Ist-Abgleich Anfangszeit und Endzeit setzen.");
+        return;
+      }
+
+      if (!start || !end) {
+        setHourCheck("neutral", "Stundenprüfung offen", "Bitte Anfangszeit und Endzeit beide setzen.");
+        return;
+      }
+
+      const expectedHours = calcExpectedHours(start, end, breakMinutes);
+      if (!Number.isFinite(expectedHours)) {
+        setHourCheck("neutral", "Stundenprüfung offen", "Anfangszeit, Endzeit und Pause sind nicht plausibel.");
+        return;
+      }
+
+      const diff = enteredHours - expectedHours;
+      const tolerance = 0.01;
+
+      if (Math.abs(diff) <= tolerance) {
+        setHourCheck(
+          "ok",
+          "Alles vollständig",
+          `Soll: ${fmtHours(expectedHours)} h | Eingetragen: ${fmtHours(enteredHours)} h`
+        );
+        return;
+      }
+
+      if (diff < -tolerance) {
+        setHourCheck(
+          "warn",
+          "Es fehlen Stunden",
+          `${fmtHours(-diff)} h fehlen (Soll: ${fmtHours(expectedHours)} h, Eingetragen: ${fmtHours(enteredHours)} h)`
+        );
+        return;
+      }
+
+      setHourCheck(
+        "over",
+        "Zu viele Stunden eingetragen",
+        `${fmtHours(diff)} h zu viel (Soll: ${fmtHours(expectedHours)} h, Eingetragen: ${fmtHours(enteredHours)} h)`
+      );
     }
 
     function render() {
       entryList.innerHTML = "";
       const dayEntries = getEntriesForSelectedDay();
-      const sorted = [...dayEntries].sort((a, b) => b.date.localeCompare(a.date));
+      const sorted = [...dayEntries].sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
       viewInfoLabel.textContent = `Angezeigter Tag: ${dateInput.value || "-"}`;
 
       if (sorted.length === 0) {
-        entryList.innerHTML = '<div class="empty">Fuer diesen Tag sind noch keine Eintraege vorhanden.</div>';
-        updateTotal([]);
+        entryList.innerHTML = '<div class="empty">Für diesen Tag sind noch keine Einträge vorhanden.</div>';
+        const entered = updateTotal([]);
+        updateHourCheck([], entered);
+        if (!exportDialog.hidden) refreshExportDialog(exportScope);
         return;
       }
 
@@ -487,54 +899,248 @@
           <div class="entry-main">
             <span class="entry-hours">${fmtHours(entry.hours)} h</span>
             <span class="entry-activity">${escapeHtml(entry.activity)}</span>
-            <button class="entry-delete danger" type="button" data-id="${entry.id}">X</button>
+            <div class="entry-actions">
+              <button class="entry-edit" type="button" data-action="edit" data-id="${entry.id}">Bearbeiten</button>
+              <button class="entry-delete danger" type="button" data-action="delete" data-id="${entry.id}">X</button>
+            </div>
           </div>
         `;
         entryList.appendChild(card);
       });
 
-      updateTotal(sorted);
+      const entered = updateTotal(sorted);
+      updateHourCheck(sorted, entered);
+      if (!exportDialog.hidden) refreshExportDialog(exportScope);
+    }
+
+    function clearInputsForNewDay() {
+      employeeCodeInput.value = "";
+      startTimeInput.value = "";
+      endTimeInput.value = "";
+      breakMinutesInput.value = "0";
+      hoursInput.value = "";
+      customerNameInput.value = "";
+      projectNumberInput.value = "";
+      activityInput.value = "";
+      autoGrowActivity();
+    }
+
+    function hydrateInputsForDate() {
+      const dayEntries = getEntriesForSelectedDay();
+      if (dayEntries.length === 0) {
+        clearInputsForNewDay();
+        return;
+      }
+
+      const last = dayEntries[dayEntries.length - 1];
+      employeeCodeInput.value = sanitizeEmployeeCode(last.employeeCode || "");
+      startTimeInput.value = last.startTime || "";
+      endTimeInput.value = last.endTime || "";
+      breakMinutesInput.value = String(last.breakMinutes ?? 0);
+      hoursInput.value = String(last.hours ?? "").replace(".", ",");
+      customerNameInput.value = last.customerName || "";
+      projectNumberInput.value = last.projectNumber || "";
+      activityInput.value = "";
+      autoGrowActivity();
     }
 
     function closeExportDialog() {
       exportDialog.hidden = true;
     }
 
-    function openExportDialog() {
-      exportDialog.hidden = false;
+    function setExportScopeButtons(scope) {
+      exportDayButton.classList.toggle("active-scope", scope === "day");
+      exportWeekButton.classList.toggle("active-scope", scope === "week");
     }
 
-    function sendMail(scope) {
+    function formatHoursExport(value) {
+      return Number(value).toFixed(2).replace(".", ",");
+    }
+
+    function formatIsoToGerman(isoDate) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(String(isoDate || ""))) return String(isoDate || "");
+      const parts = String(isoDate).split("-");
+      return `${parts[2]}.${parts[1]}.${parts[0]}`;
+    }
+
+    function sanitizeSubjectPart(value) {
+      return String(value ?? "")
+        .replace(/\r?\n/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function pickSubjectValue(entries, fieldName, fallbackValue) {
+      const values = Array.from(
+        new Set(
+          entries
+            .map((entry) => sanitizeSubjectPart(entry[fieldName]))
+            .filter(Boolean)
+        )
+      );
+      if (values.length === 0) return fallbackValue;
+      if (values.length === 1) return values[0];
+      return "Mehrere";
+    }
+
+    function sanitizeTsvCell(value) {
+      return String(value ?? "")
+        .replace(/\t/g, " ")
+        .replace(/\r?\n/g, " ")
+        .trim();
+    }
+
+    function getExportSubject(scope, exportEntries) {
+      const dateToken = formatIsoToGerman(dateInput.value || "");
+      const employeeCode = pickSubjectValue(
+        exportEntries,
+        "employeeCode",
+        sanitizeEmployeeCode(employeeCodeInput.value) || "XX"
+      );
+      const customerName = pickSubjectValue(
+        exportEntries,
+        "customerName",
+        sanitizeSubjectPart(customerNameInput.value) || "Unbekannt"
+      );
+
+      return `${sanitizeEmployeeCode(employeeCode)} ${dateToken} Stundenzettel ${customerName}`.trim();
+    }
+
+    function buildExportTsv(source) {
+      const header = [
+        "Datum",
+        "Mitarbeiterkürzel",
+        "Anfangszeit",
+        "Pause (Min)",
+        "Endzeit",
+        "Kundenname",
+        "Projektnummer",
+        "Stunden",
+        "Tätigkeit"
+      ];
+
+      const rows = [...source]
+        .sort((a, b) => {
+          const byDate = a.date.localeCompare(b.date);
+          if (byDate !== 0) return byDate;
+          return (a.createdAt || 0) - (b.createdAt || 0);
+        })
+        .map((entry) => [
+          sanitizeTsvCell(entry.date),
+          sanitizeTsvCell(entry.employeeCode),
+          sanitizeTsvCell(entry.startTime || ""),
+          sanitizeTsvCell(String(entry.breakMinutes ?? 0).replace(".", ",")),
+          sanitizeTsvCell(entry.endTime || ""),
+          sanitizeTsvCell(entry.customerName),
+          sanitizeTsvCell(entry.projectNumber),
+          sanitizeTsvCell(formatHoursExport(entry.hours)),
+          sanitizeTsvCell(entry.activity)
+        ]);
+
+      return [header.join("\t"), ...rows.map((row) => row.join("\t"))].join("\r\n");
+    }
+
+    function refreshExportDialog(scope) {
+      exportScope = scope;
+      setExportScopeButtons(scope);
+
       const exportEntries = getEntriesForExport(scope);
       if (exportEntries.length === 0) {
-        alert("Keine Eintraege fuer den gewaehlten Exportzeitraum.");
+        currentExportText = "";
+        currentExportSubject = getExportSubject(scope, []);
+        exportOutput.value = "";
+        exportMeta.textContent = "Keine Einträge für den gewählten Zeitraum.";
+        copyExportButton.disabled = true;
+        mailExportButton.disabled = true;
         return;
       }
 
-      const subject = scope === "week" ? "Stundenerfassung Woche" : "Stundenerfassung Tag";
-      const body = buildMailTable(exportEntries);
-      const mailto = `mailto:info@roewekamp-stumpe.de?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      currentExportText = buildExportTsv(exportEntries);
+      currentExportSubject = getExportSubject(scope, exportEntries);
+      exportOutput.value = currentExportText;
+
+      if (scope === "week") {
+        const range = getWeekRangeIso(dateInput.value);
+        exportMeta.textContent = range
+          ? `${exportEntries.length} Einträge | Woche ${range.start} bis ${range.end}`
+          : `${exportEntries.length} Einträge | Woche`;
+      } else {
+        exportMeta.textContent = `${exportEntries.length} Einträge | Tag ${dateInput.value || "-"}`;
+      }
+
+      copyExportButton.disabled = false;
+      mailExportButton.disabled = false;
+    }
+
+    function openExportDialog() {
+      exportDialog.hidden = false;
+      refreshExportDialog(exportScope);
+    }
+
+    function copyExportContent() {
+      if (!currentExportText) return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(currentExportText).then(() => {
+          exportMeta.textContent = "Export kopiert.";
+        }).catch(() => {
+          window.prompt("Export kopieren:", currentExportText);
+        });
+        return;
+      }
+      window.prompt("Export kopieren:", currentExportText);
+    }
+
+    function openExportMail() {
+      if (!currentExportText) return;
+      const mailto = `mailto:${OFFICE_EMAIL}?subject=${encodeURIComponent(currentExportSubject)}&body=${encodeURIComponent(currentExportText)}`;
+      if (mailto.length > 1800) {
+        alert("Export ist zu lang für den Mail-Link. Bitte 'Inhalt kopieren' verwenden.");
+        return;
+      }
       window.location.href = mailto;
-      closeExportDialog();
+    }
+
+    function sendSimpleMailForDay() {
+      const exportEntries = getEntriesForExport("day");
+      if (exportEntries.length === 0) {
+        alert("Keine Einträge für den gewählten Tag.");
+        return;
+      }
+
+      const subject = getExportSubject("day", exportEntries);
+      const body = buildExportTsv(exportEntries);
+      const mailto = `mailto:${OFFICE_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      if (mailto.length > 1800) {
+        alert("Mailtext ist zu lang. Bitte Tagesdaten reduzieren.");
+        return;
+      }
+      window.location.href = mailto;
     }
 
     form.addEventListener("submit", (event) => {
       event.preventDefault();
 
       try {
-        const hours = parseHours(hoursInput.value);
+        const hours = parseDecimal(hoursInput.value);
+        const breakMinutes = parseBreakMinutes(breakMinutesInput.value);
+
         const entry = {
           id: generateId(),
+          createdAt: Date.now(),
           date: dateInput.value,
-          employeeCode: employeeCodeInput.value.trim(),
+          employeeCode: sanitizeEmployeeCode(employeeCodeInput.value),
+          startTime: startTimeInput.value,
+          endTime: endTimeInput.value,
+          breakMinutes,
           customerName: customerNameInput.value.trim(),
           projectNumber: projectNumberInput.value.trim(),
           hours,
           activity: activityInput.value.trim()
         };
 
-        if (!entry.date || !entry.employeeCode || !entry.customerName || !entry.projectNumber || !entry.activity || !(hours > 0)) {
-          setFormMessage("Bitte alle Felder korrekt ausfuellen.", true);
+        const validationMessage = validateEntry(entry);
+        if (validationMessage) {
+          setFormMessage(validationMessage, true);
           return;
         }
 
@@ -542,10 +1148,11 @@
         saveEntries();
         render();
 
+        hoursInput.value = "";
         activityInput.value = "";
         autoGrowActivity();
         activityInput.focus();
-        setFormMessage("Eintrag gespeichert.", false);
+        setFormMessage(`Eintrag gespeichert (${fmtHours(hours)} h).`, false);
       } catch (error) {
         console.error(error);
         setFormMessage("Speichern fehlgeschlagen. Browser bitte neu laden.", true);
@@ -558,69 +1165,125 @@
       const id = target.dataset.id;
       if (!id) return;
 
+      const action = target.dataset.action;
+      if (action === "edit") {
+        openEditDialog(id);
+        return;
+      }
+
       entries = entries.filter((entry) => entry.id !== id);
       saveEntries();
       render();
     });
 
     clearAllButton.addEventListener("click", () => {
-      if (!confirm("Wirklich alle Eintraege loeschen?")) return;
+      if (!confirm("Wirklich alle Einträge löschen?")) return;
       entries = [];
       saveEntries();
       render();
+      setFormMessage("Alle Einträge wurden gelöscht.", false);
     });
 
     dateInput.addEventListener("change", () => {
-      const dayEntries = getEntriesForSelectedDay();
-      if (dayEntries.length === 0) {
-        employeeCodeInput.value = "";
-        customerNameInput.value = "";
-        projectNumberInput.value = "";
-        hoursInput.value = "";
-        activityInput.value = "";
-        autoGrowActivity();
-      }
+      hydrateInputsForDate();
       render();
+      setFormMessage("", false);
+      if (!exportDialog.hidden) {
+        refreshExportDialog(exportScope);
+      }
     });
 
-    sendMailButton.addEventListener("click", () => {
-      openExportDialog();
-    });
-
-    exportDayButton.addEventListener("click", () => sendMail("day"));
-    exportWeekButton.addEventListener("click", () => sendMail("week"));
+    sendMailButton.addEventListener("click", sendSimpleMailForDay);
+    exportDayButton.addEventListener("click", () => refreshExportDialog("day"));
+    exportWeekButton.addEventListener("click", () => refreshExportDialog("week"));
+    copyExportButton.addEventListener("click", copyExportContent);
+    mailExportButton.addEventListener("click", openExportMail);
     exportCancelButton.addEventListener("click", closeExportDialog);
+
+    editSaveButton.addEventListener("click", () => {
+      if (!editingEntryId) return;
+
+      const existing = entries.find((entry) => entry.id === editingEntryId);
+      if (!existing) {
+        closeEditDialog();
+        return;
+      }
+
+      const updated = {
+        ...existing,
+        date: editDateInput.value,
+        employeeCode: sanitizeEmployeeCode(editEmployeeCodeInput.value),
+        startTime: editStartTimeInput.value,
+        endTime: editEndTimeInput.value,
+        breakMinutes: parseBreakMinutes(editBreakMinutesInput.value),
+        hours: parseDecimal(editHoursInput.value),
+        customerName: editCustomerNameInput.value.trim(),
+        projectNumber: editProjectNumberInput.value.trim(),
+        activity: editActivityInput.value.trim()
+      };
+
+      const validationMessage = validateEntry(updated);
+      if (validationMessage) {
+        alert(validationMessage);
+        return;
+      }
+
+      entries = entries.map((entry) => (entry.id === editingEntryId ? updated : entry));
+      saveEntries();
+      closeEditDialog();
+      render();
+      setFormMessage("Eintrag wurde bearbeitet.", false);
+    });
+
+    editDeleteButton.addEventListener("click", () => {
+      if (!editingEntryId) return;
+      if (!confirm("Diesen Eintrag wirklich löschen?")) return;
+
+      entries = entries.filter((entry) => entry.id !== editingEntryId);
+      saveEntries();
+      closeEditDialog();
+      render();
+      setFormMessage("Eintrag wurde gelöscht.", false);
+    });
+
+    editCancelButton.addEventListener("click", closeEditDialog);
+
     exportDialog.addEventListener("click", (event) => {
       if (event.target === exportDialog) closeExportDialog();
     });
 
+    editDialog.addEventListener("click", (event) => {
+      if (event.target === editDialog) closeEditDialog();
+    });
+
     activityInput.addEventListener("input", autoGrowActivity);
+    editActivityInput.addEventListener("input", () => autoGrowTextarea(editActivityInput));
 
-    function buildMailTable(source) {
-      const header = ["Datum", "Mitarbeiterkuerzel", "Kundenname", "Projektnummer", "Stunden", "Taetigkeit"];
-      const rows = [...source]
-        .sort((a, b) => a.date.localeCompare(b.date))
-        .map((entry) => [
-          entry.date,
-          entry.employeeCode,
-          entry.customerName,
-          entry.projectNumber,
-          fmtHours(entry.hours),
-          entry.activity
-        ]);
+    employeeCodeInput.addEventListener("input", () => {
+      employeeCodeInput.value = sanitizeEmployeeCode(employeeCodeInput.value);
+    });
+    editEmployeeCodeInput.addEventListener("input", () => {
+      editEmployeeCodeInput.value = sanitizeEmployeeCode(editEmployeeCodeInput.value);
+    });
 
-      const widths = header.map((item) => item.length);
-      rows.forEach((row) => {
-        row.forEach((value, index) => {
-          widths[index] = Math.max(widths[index], String(value).length);
-        });
-      });
+    startTimeInput.addEventListener("blur", () => {
+      startTimeInput.value = normalizeTimeInputValue(startTimeInput.value);
+      render();
+    });
+    endTimeInput.addEventListener("blur", () => {
+      endTimeInput.value = normalizeTimeInputValue(endTimeInput.value);
+      render();
+    });
+    editStartTimeInput.addEventListener("blur", () => {
+      editStartTimeInput.value = normalizeTimeInputValue(editStartTimeInput.value);
+    });
+    editEndTimeInput.addEventListener("blur", () => {
+      editEndTimeInput.value = normalizeTimeInputValue(editEndTimeInput.value);
+    });
 
-      const formatRow = (row) => row.map((value, index) => rightPad(value, widths[index])).join(" | ");
-      const separator = widths.map((width) => "-".repeat(width)).join("-+-");
-
-      return [formatRow(header), separator, ...rows.map(formatRow)].join("\n");
-    }
+    startTimeInput.addEventListener("change", render);
+    endTimeInput.addEventListener("change", render);
+    breakMinutesInput.addEventListener("input", render);
 
     autoGrowActivity();
     render();
