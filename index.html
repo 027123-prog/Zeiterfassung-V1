@@ -22,6 +22,11 @@
       --over-fg: #991b1b;
       --neutral-bg: #f8fafc;
       --neutral-fg: #334155;
+      --fb: #e6f4ea;
+      --ba: #e8f0fe;
+      --ia: #fff7e6;
+      --da: #f2dfcc;
+      --picker-neutral: #f3f4f6;
     }
 
     * {
@@ -104,6 +109,80 @@
       background: #fff;
     }
 
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      min-height: 18px;
+      padding: 0;
+      margin: 0;
+      accent-color: var(--accent);
+    }
+
+    .inline-check {
+      min-height: 38px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 7px 9px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      background: #fff;
+    }
+
+    .project-code-wrap {
+      display: grid;
+      grid-template-columns: 64px auto 84px;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .project-code-wrap input {
+      text-align: center;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .project-year-btn {
+      min-height: 38px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--text);
+      padding: 7px 9px;
+      text-align: center;
+      font: inherit;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+    }
+
+    .project-year-btn:hover {
+      background: #f8fafc;
+    }
+
+    #projectSuffix::placeholder,
+    #editProjectSuffix::placeholder {
+      font-style: italic;
+      font-size: 11px;
+      color: #94a3b8;
+    }
+
+    .project-code-static {
+      min-height: 38px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #eef2f7;
+      color: #64748b;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      user-select: none;
+      pointer-events: none;
+    }
+
     #employeeCode,
     #editEmployeeCode {
       text-transform: uppercase;
@@ -121,6 +200,28 @@
       display: grid;
       gap: 6px;
       grid-template-columns: 1fr 1fr;
+    }
+
+    .template-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .template-btn {
+      min-height: 32px;
+      padding: 4px 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: #f8fafc;
+      color: #1e293b;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .template-btn:hover {
+      background: #eef2f7;
     }
 
     button {
@@ -362,6 +463,147 @@
       overflow: auto;
     }
 
+    .year-picker-dialog {
+      width: min(100%, 320px);
+    }
+
+    .year-picker-options {
+      margin-top: 8px;
+      display: grid;
+      gap: 8px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .year-option {
+      min-height: 40px;
+      background: #eef2f7;
+      color: #1e293b;
+      border: 1px solid var(--border);
+    }
+
+    .year-option.active-year {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .cost-picker-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.42);
+      z-index: 30;
+    }
+
+    .cost-picker-backdrop[hidden] {
+      display: none;
+    }
+
+    .cost-picker-sheet {
+      height: 100dvh;
+      background: #fff;
+      display: grid;
+      grid-template-rows: auto auto auto;
+      align-content: start;
+      gap: 6px;
+      padding: 8px;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    .cost-picker-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cost-picker-head h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .cost-picker-close {
+      min-height: 28px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: #1e293b;
+      border-radius: 8px;
+      padding: 2px 8px;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .cost-picker-groups {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 4px;
+    }
+
+    .cost-picker-section {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 4px;
+      display: grid;
+      gap: 3px;
+      min-width: 0;
+    }
+
+    .cost-picker-section h4 {
+      margin: 0;
+      font-size: 11px;
+      line-height: 1.2;
+    }
+
+    .cost-picker-section.fb { background: var(--fb); }
+    .cost-picker-section.ba { background: var(--ba); }
+    .cost-picker-section.ia { background: var(--ia); }
+    .cost-picker-section.da { background: var(--da); }
+    .cost-picker-section.other { background: var(--picker-neutral); }
+
+    .cost-picker-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 3px;
+    }
+
+    .cost-picker-section.other .cost-picker-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 4px;
+    }
+
+    .cost-picker-item {
+      border: 1px solid rgba(15, 23, 42, 0.18);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.84);
+      padding: 4px;
+      display: grid;
+      gap: 1px;
+      text-align: left;
+      cursor: pointer;
+      min-width: 0;
+      color: var(--text);
+    }
+
+    .cost-picker-item small {
+      color: #334155;
+      font-size: 9px;
+      line-height: 1.05;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cost-picker-code {
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      font-size: 12px;
+      color: #0b3a74;
+    }
+
     @media (min-width: 880px) {
       .app {
         grid-template-columns: 1fr 1fr;
@@ -378,11 +620,11 @@
         <div class="form-grid">
           <div class="form-row">
             <label>Datum
-              <input id="date" type="date" required />
+              <input id="date" type="date" />
             </label>
 
             <label>Mitarbeiterkürzel
-              <input id="employeeCode" type="text" maxlength="20" autocomplete="off" autocapitalize="characters" spellcheck="false" required />
+              <input id="employeeCode" type="text" maxlength="20" autocomplete="off" autocapitalize="characters" spellcheck="false" />
             </label>
           </div>
 
@@ -402,20 +644,37 @@
 
           <div class="form-row">
             <label>Kundenname
-              <input id="customerName" type="text" maxlength="80" required />
+              <input id="customerName" type="text" maxlength="80" />
             </label>
 
-            <label>Projektnummer
-              <input id="projectNumber" type="text" maxlength="40" required />
+            <label>Vorgangsnr.
+              <div class="project-code-wrap">
+                <button id="projectYearButton" class="project-year-btn" type="button">26</button>
+                <span class="project-code-static">VG0</span>
+                <input id="projectSuffix" type="text" maxlength="3" inputmode="numeric" placeholder="z.B. 128" />
+              </div>
+              <input id="projectNumber" type="hidden" />
+            </label>
+          </div>
+
+          <div class="form-row">
+            <label>Kostenstelle
+              <input id="costCenter" type="text" maxlength="60" placeholder="Code wählen (z. B. FWS)" readonly />
+            </label>
+            <label>Nach Aufwand?
+              <span class="inline-check">
+                <input id="isByEffort" type="checkbox" />
+                <span>Ja</span>
+              </span>
             </label>
           </div>
 
           <label>Tätigkeit
-            <textarea id="activity" rows="2" maxlength="500" required></textarea>
+            <textarea id="activity" rows="2" maxlength="500"></textarea>
           </label>
 
           <label>Stunden (Komma/Punkt)
-            <input id="hours" type="text" inputmode="decimal" placeholder="z. B. 1,5 oder 1.5" required />
+            <input id="hours" type="text" inputmode="decimal" placeholder="z. B. 1,5 oder 1.5" />
           </label>
         </div>
 
@@ -466,10 +725,10 @@
       <div class="form-grid">
         <div class="form-row">
           <label>Datum
-            <input id="editDate" type="date" required />
+            <input id="editDate" type="date" />
           </label>
           <label>Mitarbeiterkürzel
-            <input id="editEmployeeCode" type="text" maxlength="20" autocomplete="off" autocapitalize="characters" spellcheck="false" required />
+            <input id="editEmployeeCode" type="text" maxlength="20" autocomplete="off" autocapitalize="characters" spellcheck="false" />
           </label>
         </div>
         <div class="form-row">
@@ -485,19 +744,35 @@
             <input id="editBreakMinutes" type="text" inputmode="decimal" />
           </label>
           <label>Stunden
-            <input id="editHours" type="text" inputmode="decimal" required />
+            <input id="editHours" type="text" inputmode="decimal" />
           </label>
         </div>
         <div class="form-row">
           <label>Kundenname
-            <input id="editCustomerName" type="text" maxlength="80" required />
+            <input id="editCustomerName" type="text" maxlength="80" />
           </label>
-          <label>Projektnummer
-            <input id="editProjectNumber" type="text" maxlength="40" required />
+          <label>Vorgangsnr.
+            <div class="project-code-wrap">
+              <button id="editProjectYearButton" class="project-year-btn" type="button">26</button>
+              <span class="project-code-static">VG0</span>
+              <input id="editProjectSuffix" type="text" maxlength="3" inputmode="numeric" placeholder="z.B. 128" />
+            </div>
+            <input id="editProjectNumber" type="hidden" />
+          </label>
+        </div>
+        <div class="form-row">
+          <label>Kostenstelle
+            <input id="editCostCenter" type="text" maxlength="60" placeholder="Code wählen (z. B. FWS)" readonly />
+          </label>
+          <label>Nach Aufwand?
+            <span class="inline-check">
+              <input id="editIsByEffort" type="checkbox" />
+              <span>Ja</span>
+            </span>
           </label>
         </div>
         <label>Tätigkeit
-          <textarea id="editActivity" rows="2" maxlength="500" required></textarea>
+          <textarea id="editActivity" rows="2" maxlength="500"></textarea>
         </label>
       </div>
       <div class="dialog-actions">
@@ -508,9 +783,172 @@
     </div>
   </div>
 
+  <div id="yearPickerDialog" class="dialog-backdrop" hidden>
+    <div class="dialog year-picker-dialog">
+      <h3>Jahr wählen</h3>
+      <p class="muted">Wähle die zweistellige Jahreszahl.</p>
+      <div id="yearPickerOptions" class="year-picker-options"></div>
+      <div class="dialog-actions">
+        <button id="yearPickerCancel" type="button" class="ghost">Abbrechen</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="costPickerBackdrop" class="cost-picker-backdrop" hidden>
+    <div class="cost-picker-sheet">
+      <div class="cost-picker-head">
+        <h3>Kostenstelle wählen</h3>
+        <button id="closeCostPicker" class="cost-picker-close" type="button">Schließen</button>
+      </div>
+
+      <div class="cost-picker-groups">
+        <section class="cost-picker-section fb">
+          <h4>Fußboden</h4>
+          <div class="cost-picker-grid">
+            <button class="cost-picker-item" type="button" data-code="FAF" data-label="Fußboden Fahr/Lade"><small>Fahr/Lade</small><span class="cost-picker-code">FAF</span></button>
+            <button class="cost-picker-item" type="button" data-code="FMO" data-label="Fußboden Montage"><small>Montage</small><span class="cost-picker-code">FMO</span></button>
+            <button class="cost-picker-item" type="button" data-code="FWS" data-label="Fußboden Werkstatt"><small>Werkstatt</small><span class="cost-picker-code">FWS</span></button>
+          </div>
+        </section>
+
+        <section class="cost-picker-section ba">
+          <h4>Bauelemente</h4>
+          <div class="cost-picker-grid">
+            <button class="cost-picker-item" type="button" data-code="BAF" data-label="Bauelem. Fahr/Lade"><small>Fahr/Lade</small><span class="cost-picker-code">BAF</span></button>
+            <button class="cost-picker-item" type="button" data-code="BMO" data-label="Bauelem. Mont."><small>Montage</small><span class="cost-picker-code">BMO</span></button>
+            <button class="cost-picker-item" type="button" data-code="BWS" data-label="Bauelem. WS"><small>Werkstatt</small><span class="cost-picker-code">BWS</span></button>
+          </div>
+        </section>
+
+        <section class="cost-picker-section ia">
+          <h4>Innenausbau</h4>
+          <div class="cost-picker-grid">
+            <button class="cost-picker-item" type="button" data-code="IAF" data-label="Innenausbau Fahr/Lade"><small>Fahr/Lade</small><span class="cost-picker-code">IAF</span></button>
+            <button class="cost-picker-item" type="button" data-code="IMO" data-label="Innenausbau Mont."><small>Montage</small><span class="cost-picker-code">IMO</span></button>
+            <button class="cost-picker-item" type="button" data-code="IWS" data-label="Innenausbau WS"><small>Werkstatt</small><span class="cost-picker-code">IWS</span></button>
+          </div>
+        </section>
+
+        <section class="cost-picker-section da">
+          <h4>Dämmung/Lehm</h4>
+          <div class="cost-picker-grid">
+            <button class="cost-picker-item" type="button" data-code="DAF" data-label="Dämmung/Lehm Fahr/Lade"><small>Fahr/Lade</small><span class="cost-picker-code">DAF</span></button>
+            <button class="cost-picker-item" type="button" data-code="DMO" data-label="Dämmung/Lehm Mont."><small>Montage</small><span class="cost-picker-code">DMO</span></button>
+            <button class="cost-picker-item" type="button" data-code="DWS" data-label="Dämmung/Lehm WS"><small>Werkstatt</small><span class="cost-picker-code">DWS</span></button>
+          </div>
+        </section>
+      </div>
+
+      <section class="cost-picker-section other">
+        <h4>Weitere Kostenstellen</h4>
+        <div class="cost-picker-grid">
+          <button class="cost-picker-item" type="button" data-code="REK" data-label="Reklamation"><small>Reklamation</small><span class="cost-picker-code">REK</span></button>
+          <button class="cost-picker-item" type="button" data-code="WAR" data-label="Wartung"><small>Wartung</small><span class="cost-picker-code">WAR</span></button>
+          <button class="cost-picker-item" type="button" data-code="KRS" data-label="Innerbetriebliche Kleinaufträge"><small>Kleinaufträge</small><span class="cost-picker-code">KRS</span></button>
+          <button class="cost-picker-item" type="button" data-code="SIU" data-label="Schulung im Untern."><small>Schulung</small><span class="cost-picker-code">SIU</span></button>
+          <button class="cost-picker-item" type="button" data-code="ORD" data-label="Ordnung"><small>Ordnung</small><span class="cost-picker-code">ORD</span></button>
+          <button class="cost-picker-item" type="button" data-code="KDB" data-label="Kosten der Beschaffung"><small>Beschaffung</small><span class="cost-picker-code">KDB</span></button>
+        </div>
+      </section>
+
+      <section class="cost-picker-section other">
+        <h4>Vorlagen</h4>
+        <div id="templateButtons" class="template-buttons"></div>
+      </section>
+    </div>
+  </div>
+
   <script>
     const STORAGE_KEY = "time_entries_mail_v4";
     const OFFICE_EMAIL = "info@roewekamp-stumpe.de";
+    const TEMPLATE_CSV_FILE = "./kostenstelle_vorlagen.csv";
+    // Hosted single-file fallback: templates are embedded here.
+    const DEFAULT_TEMPLATES = [
+      {
+        id: "tpl-inline-1",
+        label: "Schulung",
+        customerName: "",
+        projectPrefix: "",
+        projectSuffix: "",
+        costCenter: "SIU",
+        isByEffort: false,
+        activity: "Schulung:",
+        startTime: "",
+        endTime: "",
+        breakMinutes: "",
+        hours: ""
+      },
+      {
+        id: "tpl-inline-2",
+        label: "Werkstattbesprechung",
+        customerName: "",
+        projectPrefix: "",
+        projectSuffix: "",
+        costCenter: "SIU",
+        isByEffort: false,
+        activity: "Werkstattbesprechung",
+        startTime: "",
+        endTime: "",
+        breakMinutes: "",
+        hours: ""
+      },
+      {
+        id: "tpl-inline-3",
+        label: "Ordnung",
+        customerName: "",
+        projectPrefix: "",
+        projectSuffix: "",
+        costCenter: "ORD",
+        isByEffort: false,
+        activity: "Ordnung:",
+        startTime: "",
+        endTime: "",
+        breakMinutes: "",
+        hours: ""
+      },
+      {
+        id: "tpl-inline-4",
+        label: "Kleinaufträge",
+        customerName: "RS",
+        projectPrefix: "",
+        projectSuffix: "016",
+        costCenter: "IWS",
+        isByEffort: false,
+        activity: "Kleinauftrag:",
+        startTime: "",
+        endTime: "",
+        breakMinutes: "",
+        hours: ""
+      },
+      {
+        id: "tpl-inline-5",
+        label: "Muster",
+        customerName: "RS",
+        projectPrefix: "",
+        projectSuffix: "017",
+        costCenter: "IWS",
+        isByEffort: false,
+        activity: "Muster:",
+        startTime: "",
+        endTime: "",
+        breakMinutes: "",
+        hours: ""
+      },
+      {
+        id: "tpl-inline-6",
+        label: "Werkstatteinrichtung",
+        customerName: "RS",
+        projectPrefix: "",
+        projectSuffix: "034",
+        costCenter: "IWS",
+        isByEffort: false,
+        activity: "Werkstatteinrichtung:",
+        startTime: "",
+        endTime: "",
+        breakMinutes: "",
+        hours: ""
+      }
+    ];
 
     const form = document.getElementById("entryForm");
     const dateInput = document.getElementById("date");
@@ -520,6 +958,11 @@
     const breakMinutesInput = document.getElementById("breakMinutes");
     const hoursInput = document.getElementById("hours");
     const customerNameInput = document.getElementById("customerName");
+    const costCenterInput = document.getElementById("costCenter");
+    const isByEffortInput = document.getElementById("isByEffort");
+    const templateButtons = document.getElementById("templateButtons");
+    const projectYearButton = document.getElementById("projectYearButton");
+    const projectSuffixInput = document.getElementById("projectSuffix");
     const projectNumberInput = document.getElementById("projectNumber");
     const activityInput = document.getElementById("activity");
     const entryList = document.getElementById("entryList");
@@ -547,11 +990,20 @@
     const editBreakMinutesInput = document.getElementById("editBreakMinutes");
     const editHoursInput = document.getElementById("editHours");
     const editCustomerNameInput = document.getElementById("editCustomerName");
+    const editCostCenterInput = document.getElementById("editCostCenter");
+    const editIsByEffortInput = document.getElementById("editIsByEffort");
+    const editProjectYearButton = document.getElementById("editProjectYearButton");
+    const editProjectSuffixInput = document.getElementById("editProjectSuffix");
     const editProjectNumberInput = document.getElementById("editProjectNumber");
     const editActivityInput = document.getElementById("editActivity");
     const editSaveButton = document.getElementById("editSave");
     const editDeleteButton = document.getElementById("editDelete");
     const editCancelButton = document.getElementById("editCancel");
+    const yearPickerDialog = document.getElementById("yearPickerDialog");
+    const yearPickerOptions = document.getElementById("yearPickerOptions");
+    const yearPickerCancelButton = document.getElementById("yearPickerCancel");
+    const costPickerBackdrop = document.getElementById("costPickerBackdrop");
+    const closeCostPickerButton = document.getElementById("closeCostPicker");
 
     let inMemoryEntries = [];
     let localStorageEnabled = canUseLocalStorage();
@@ -560,6 +1012,9 @@
     let exportScope = "day";
     let currentExportText = "";
     let currentExportSubject = "";
+    let costPickerTargetInput = null;
+    let yearPickerTarget = "";
+    let templates = [...DEFAULT_TEMPLATES];
 
     dateInput.value = getLocalDateISO();
 
@@ -620,7 +1075,9 @@
     }
 
     function fmtHours(value) {
-      return Number(value).toFixed(2);
+      const num = Number(value);
+      if (!Number.isFinite(num)) return "";
+      return num.toFixed(2);
     }
 
     function setFormMessage(text, isError) {
@@ -644,6 +1101,190 @@
       return String(rawValue || "")
         .toUpperCase()
         .replace(/[^A-ZÄÖÜ]/g, "");
+    }
+
+    function getYearTwoFromIso(dateIso) {
+      const match = String(dateIso || "").match(/^(\d{4})-\d{2}-\d{2}$/);
+      if (match) return match[1].slice(2);
+      return String(new Date().getFullYear()).slice(-2);
+    }
+
+    function getProjectPrefix(dateIso) {
+      return `${getYearTwoFromIso(dateIso)}VG0`;
+    }
+
+    function normalizeProjectNumber(rawValue, dateIso) {
+      const raw = String(rawValue || "").toUpperCase().replace(/\s+/g, "");
+      if (!raw) return "";
+
+      const exact = raw.match(/^(\d{2})VG0(\d{1,3})$/);
+      if (exact) return `${exact[1]}VG0${exact[2].padStart(3, "0")}`;
+
+      const suffixOnly = raw.match(/^(\d{1,3})$/);
+      if (suffixOnly) return `${getProjectPrefix(dateIso)}${suffixOnly[1].padStart(3, "0")}`;
+
+      const digits = raw.replace(/\D/g, "");
+      if (digits.length >= 5) {
+        const yearTwo = digits.slice(0, 2);
+        const suffixThree = digits.slice(-3);
+        return `${yearTwo}VG0${suffixThree}`;
+      }
+
+      return raw;
+    }
+
+    function isValidProjectNumber(value) {
+      return /^\d{2}VG0\d{3}$/.test(String(value || "").toUpperCase().trim());
+    }
+
+    function sanitizeDigits(rawValue, maxLength) {
+      const digits = String(rawValue || "").replace(/\D/g, "");
+      return typeof maxLength === "number" ? digits.slice(0, maxLength) : digits;
+    }
+
+    function splitProjectNumber(rawValue, dateIso) {
+      const normalized = normalizeProjectNumber(rawValue, dateIso);
+      const match = normalized.match(/^(\d{2})VG0(\d{3})$/);
+      if (match) {
+        return { year: match[1], suffix: match[2] };
+      }
+      return { year: getYearTwoFromIso(dateIso), suffix: "" };
+    }
+
+    function normalizeOptionalProjectNumber(rawValue, dateIso) {
+      const normalized = normalizeProjectNumber(rawValue, dateIso);
+      if (/^\d{2}VG0$/i.test(String(normalized || "").trim())) return "";
+      return normalized;
+    }
+
+    function normalizeYearTwo(rawValue, dateIso) {
+      const year = sanitizeDigits(rawValue, 2);
+      return year || getYearTwoFromIso(dateIso);
+    }
+
+    function setYearButtonValue(button, rawYear, dateIso) {
+      const year = normalizeYearTwo(rawYear, dateIso);
+      button.dataset.year = year;
+      button.textContent = year;
+    }
+
+    function getYearButtonValue(button, dateIso) {
+      return normalizeYearTwo(button.dataset.year || button.textContent || "", dateIso);
+    }
+
+    function buildProjectNumberFromParts(yearPart, suffixPart, dateIso) {
+      const year = normalizeYearTwo(yearPart, dateIso);
+      const suffix = sanitizeDigits(suffixPart, 3);
+      if (!suffix) return `${year}VG0`;
+      return `${year}VG0${suffix.padStart(3, "0")}`;
+    }
+
+    function syncMainProjectNumber() {
+      projectSuffixInput.value = sanitizeDigits(projectSuffixInput.value, 3);
+      const year = getYearButtonValue(projectYearButton, dateInput.value);
+      setYearButtonValue(projectYearButton, year, dateInput.value);
+      projectNumberInput.value = buildProjectNumberFromParts(
+        year,
+        projectSuffixInput.value,
+        dateInput.value
+      );
+    }
+
+    function syncEditProjectNumber() {
+      editProjectSuffixInput.value = sanitizeDigits(editProjectSuffixInput.value, 3);
+      const dateForEdit = editDateInput.value || dateInput.value;
+      const year = getYearButtonValue(editProjectYearButton, dateForEdit);
+      setYearButtonValue(editProjectYearButton, year, dateForEdit);
+      editProjectNumberInput.value = buildProjectNumberFromParts(
+        year,
+        editProjectSuffixInput.value,
+        dateForEdit
+      );
+    }
+
+    function setMainProjectParts(rawValue, dateIso) {
+      const parts = splitProjectNumber(rawValue, dateIso);
+      setYearButtonValue(projectYearButton, parts.year, dateIso);
+      projectSuffixInput.value = parts.suffix;
+      syncMainProjectNumber();
+    }
+
+    function setEditProjectParts(rawValue, dateIso) {
+      const parts = splitProjectNumber(rawValue, dateIso);
+      setYearButtonValue(editProjectYearButton, parts.year, dateIso);
+      editProjectSuffixInput.value = parts.suffix;
+      syncEditProjectNumber();
+    }
+
+    function wireProjectSuffixInput(input, syncFn) {
+      input.addEventListener("focus", () => {
+        input.value = "";
+        syncFn();
+      });
+
+      input.addEventListener("input", () => {
+        input.value = sanitizeDigits(input.value, 3);
+        syncFn();
+      });
+
+      input.addEventListener("blur", () => {
+        input.value = sanitizeDigits(input.value, 3);
+        if (input.value) {
+          input.value = input.value.padStart(3, "0");
+        }
+        syncFn();
+      });
+    }
+
+    function getWrappedYearTwo(value) {
+      const normalized = ((value % 100) + 100) % 100;
+      return leftPad2(normalized);
+    }
+
+    function buildYearOptions(centerYearTwo) {
+      const center = Number.parseInt(centerYearTwo, 10);
+      const base = Number.isFinite(center) ? center : Number.parseInt(getYearTwoFromIso(dateInput.value), 10);
+      const options = [];
+      for (let offset = -2; offset <= 2; offset += 1) {
+        options.push(getWrappedYearTwo(base + offset));
+      }
+      return options;
+    }
+
+    function openYearPicker(target) {
+      yearPickerTarget = target;
+      const dateForTarget = target === "edit" ? (editDateInput.value || dateInput.value) : dateInput.value;
+      const currentYear = target === "edit"
+        ? getYearButtonValue(editProjectYearButton, dateForTarget)
+        : getYearButtonValue(projectYearButton, dateForTarget);
+      const options = buildYearOptions(currentYear);
+      yearPickerOptions.innerHTML = "";
+      options.forEach((yearToken) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `year-option${yearToken === currentYear ? " active-year" : ""}`;
+        button.dataset.year = yearToken;
+        button.textContent = yearToken;
+        yearPickerOptions.appendChild(button);
+      });
+      yearPickerDialog.hidden = false;
+    }
+
+    function closeYearPicker() {
+      yearPickerDialog.hidden = true;
+      yearPickerTarget = "";
+    }
+
+    function applyYearFromPicker(yearToken) {
+      if (!yearPickerTarget) return;
+      if (yearPickerTarget === "edit") {
+        setYearButtonValue(editProjectYearButton, yearToken, editDateInput.value || dateInput.value);
+        syncEditProjectNumber();
+      } else {
+        setYearButtonValue(projectYearButton, yearToken, dateInput.value);
+        syncMainProjectNumber();
+      }
+      closeYearPicker();
     }
 
     function parseTimeToMinutes(value) {
@@ -702,29 +1343,45 @@
     }
 
     function validateEntry(entry) {
-      if (!entry.date || !entry.employeeCode || !entry.customerName || !entry.projectNumber || !entry.activity) {
-        return "Bitte alle Felder ausfüllen.";
+      if (!entry.date) {
+        return "Bitte ein Datum wählen.";
+      }
+
+      const projectText = String(entry.projectNumber || "").trim().toUpperCase();
+      const hasProject = projectText !== "" && !/^\d{2}VG0$/.test(projectText);
+      if (hasProject && !isValidProjectNumber(entry.projectNumber)) {
+        return "Vorgangsnr. bitte im Format 26VG0128 eingeben. Du kannst auch nur die letzten 3 Ziffern eingeben.";
       }
 
       if (!Number.isFinite(entry.breakMinutes) || entry.breakMinutes < 0) {
         return "Pause bitte als gültige Zahl in Minuten eingeben.";
       }
 
-      const hasStart = Boolean(entry.startTime);
-      const hasEnd = Boolean(entry.endTime);
-      if (hasStart !== hasEnd) {
-        return "Bitte Anfangszeit und Endzeit zusammen ausfüllen oder beide leer lassen.";
-      }
-
-      if (hasStart && hasEnd) {
+      if (entry.startTime && entry.endTime) {
         const expectedHours = calcExpectedHours(entry.startTime, entry.endTime, entry.breakMinutes);
         if (!Number.isFinite(expectedHours)) {
           return "Anfangszeit, Endzeit und Pause sind nicht plausibel.";
         }
       }
 
-      if (!Number.isFinite(entry.hours) || entry.hours <= 0) {
+      const hasHours = String(entry.hours ?? "").trim() !== "";
+      if (hasHours && (!Number.isFinite(Number(entry.hours)) || Number(entry.hours) <= 0)) {
         return "Stunden bitte als Zahl eingeben (Komma oder Punkt erlaubt).";
+      }
+
+      const hasAnyContent = [
+        entry.employeeCode,
+        entry.startTime,
+        entry.endTime,
+        entry.customerName,
+        entry.projectNumber,
+        entry.costCenter,
+        entry.activity,
+        entry.hours
+      ].some((value) => String(value ?? "").trim() !== "")
+        || Boolean(entry.isByEffort);
+      if (!hasAnyContent) {
+        return "Bitte mindestens ein Feld ausfüllen.";
       }
 
       return "";
@@ -740,9 +1397,11 @@
       editStartTimeInput.value = entry.startTime || "";
       editEndTimeInput.value = entry.endTime || "";
       editBreakMinutesInput.value = String(entry.breakMinutes ?? 0).replace(".", ",");
-      editHoursInput.value = String(entry.hours ?? "").replace(".", ",");
+      editHoursInput.value = Number.isFinite(Number(entry.hours)) ? String(entry.hours).replace(".", ",") : "";
       editCustomerNameInput.value = entry.customerName || "";
-      editProjectNumberInput.value = entry.projectNumber || "";
+      editCostCenterInput.value = entry.costCenter || "";
+      editIsByEffortInput.checked = Boolean(entry.isByEffort);
+      setEditProjectParts(entry.projectNumber || "", entry.date || dateInput.value);
       editActivityInput.value = entry.activity || "";
       autoGrowTextarea(editActivityInput);
       editDialog.hidden = false;
@@ -751,6 +1410,17 @@
     function closeEditDialog() {
       editingEntryId = null;
       editDialog.hidden = true;
+    }
+
+    function openCostPicker(targetInput) {
+      if (!targetInput) return;
+      costPickerTargetInput = targetInput;
+      costPickerBackdrop.hidden = false;
+    }
+
+    function closeCostPickerDialog() {
+      costPickerBackdrop.hidden = true;
+      costPickerTargetInput = null;
     }
 
     function getEntriesForSelectedDay() {
@@ -816,7 +1486,10 @@
     }
 
     function updateTotal(dayEntries) {
-      const total = dayEntries.reduce((sum, entry) => sum + Number(entry.hours), 0);
+      const total = dayEntries.reduce((sum, entry) => {
+        const value = Number(entry.hours);
+        return sum + (Number.isFinite(value) ? value : 0);
+      }, 0);
       totalHoursLabel.textContent = fmtHours(total);
       return total;
     }
@@ -894,10 +1567,12 @@
       sorted.forEach((entry) => {
         const card = document.createElement("article");
         card.className = "entry-card";
+        const hoursLabel = Number.isFinite(Number(entry.hours)) ? `${fmtHours(entry.hours)} h` : "-";
+        const costCenterLabel = String(entry.costCenter || "").trim() || "-";
         card.innerHTML = `
-          <div class="entry-meta">${escapeHtml(entry.customerName)} | ${escapeHtml(entry.projectNumber)}</div>
+          <div class="entry-meta">${escapeHtml(entry.customerName)} | ${escapeHtml(entry.projectNumber)} | ${escapeHtml(costCenterLabel)}</div>
           <div class="entry-main">
-            <span class="entry-hours">${fmtHours(entry.hours)} h</span>
+            <span class="entry-hours">${hoursLabel}</span>
             <span class="entry-activity">${escapeHtml(entry.activity)}</span>
             <div class="entry-actions">
               <button class="entry-edit" type="button" data-action="edit" data-id="${entry.id}">Bearbeiten</button>
@@ -920,7 +1595,9 @@
       breakMinutesInput.value = "0";
       hoursInput.value = "";
       customerNameInput.value = "";
-      projectNumberInput.value = "";
+      costCenterInput.value = "";
+      isByEffortInput.checked = false;
+      setMainProjectParts("", dateInput.value);
       activityInput.value = "";
       autoGrowActivity();
     }
@@ -937,9 +1614,11 @@
       startTimeInput.value = last.startTime || "";
       endTimeInput.value = last.endTime || "";
       breakMinutesInput.value = String(last.breakMinutes ?? 0);
-      hoursInput.value = String(last.hours ?? "").replace(".", ",");
+      hoursInput.value = Number.isFinite(Number(last.hours)) ? String(last.hours).replace(".", ",") : "";
       customerNameInput.value = last.customerName || "";
-      projectNumberInput.value = last.projectNumber || "";
+      costCenterInput.value = last.costCenter || "";
+      isByEffortInput.checked = Boolean(last.isByEffort);
+      setMainProjectParts(last.projectNumber || "", dateInput.value);
       activityInput.value = "";
       autoGrowActivity();
     }
@@ -954,7 +1633,19 @@
     }
 
     function formatHoursExport(value) {
-      return Number(value).toFixed(2).replace(".", ",");
+      const num = Number(value);
+      if (!Number.isFinite(num)) return "";
+      return num.toFixed(2).replace(".", ",");
+    }
+
+    function formatBreakMinutesExport(value) {
+      const num = Number(value);
+      if (!Number.isFinite(num)) return "";
+      return String(num).replace(".", ",");
+    }
+
+    function formatByEffortExport(value) {
+      return value ? "Ja" : "Nein";
     }
 
     function formatIsoToGerman(isoDate) {
@@ -990,6 +1681,205 @@
         .trim();
     }
 
+    function parseTemplateBool(value) {
+      const text = String(value || "").trim().toLowerCase();
+      if (text === "") return null;
+      if (["ja", "j", "true", "1", "x"].includes(text)) return true;
+      if (["nein", "n", "false", "0"].includes(text)) return false;
+      return null;
+    }
+
+    function parseTemplateProjectYear(value) {
+      const raw = String(value || "").trim().toUpperCase().replace(/\s+/g, "");
+      if (!raw) return "";
+      const plain2 = raw.match(/^(\d{2})$/);
+      if (plain2) return plain2[1];
+      const plain4 = raw.match(/^(\d{4})$/);
+      if (plain4) return plain4[1].slice(2);
+      const vg = raw.match(/^(\d{2})VG0?$/);
+      if (vg) return vg[1];
+      const any = raw.match(/^(\d{2})/);
+      if (any) return any[1];
+      return "";
+    }
+
+    function parseTemplateProjectSuffix(value) {
+      const digits = sanitizeDigits(String(value || ""));
+      if (!digits) return "";
+      return digits.slice(-3);
+    }
+
+    function normalizeTemplateHeader(value) {
+      return String(value || "")
+        .trim()
+        .toLowerCase()
+        .replace(/ä/g, "ae")
+        .replace(/ö/g, "oe")
+        .replace(/ü/g, "ue")
+        .replace(/ß/g, "ss")
+        .replace(/[^a-z0-9]+/g, "");
+    }
+
+    function normalizeTemplateTextCell(value) {
+      const text = String(value || "").trim();
+      if (!text) return "";
+      if (/^leer$/i.test(text) || text === "-") return "";
+      return text;
+    }
+
+    function parseTemplateCsv(text) {
+      const rawLines = String(text || "")
+        .split(/\r?\n/)
+        .map((line) => line.trim())
+        .filter((line) => {
+          if (line === "") return false;
+          if (line.startsWith("#")) return false;
+          // Excel-exportierte Kommentarzeilen können so aussehen: "# ..."
+          if (line.startsWith("\"#")) return false;
+          return true;
+        });
+      if (rawLines.length === 0) return [];
+
+      const header = rawLines[0].split(";").map((cell) => cell.trim());
+      const normalizedHeader = header.map(normalizeTemplateHeader);
+      const byCandidates = (candidates) => normalizedHeader.findIndex((h) => candidates.includes(h));
+      const indices = {
+        label: byCandidates(["buttonname", "label", "vorlage", "name"]),
+        customerName: byCandidates(["kunde", "kundenname", "customername"]),
+        projectPrefix: byCandidates(["vorgangspraefix", "vorgangpraefix", "vorgangprefix", "praefix", "prefix", "jahr", "jahr2"]),
+        projectSuffix: byCandidates(["vorgangsuffix", "vorgangnr", "vorgangsnr", "projectsuffix", "suffix"]),
+        costCenter: byCandidates(["kostenstelle", "costcenter", "kst"]),
+        isByEffort: byCandidates(["nachaufwand", "aufwand", "isbyeffort"]),
+        activity: byCandidates(["taetigkeit", "tatigkeit", "activity"]),
+        startTime: byCandidates(["startzeit", "starttime", "start"]),
+        endTime: byCandidates(["endzeit", "endtime", "ende"]),
+        breakMinutes: byCandidates(["pause", "pauseminuten", "pausenminuten", "breakminutes", "pausemin"]),
+        hours: byCandidates(["stunden", "hours"])
+      };
+
+      const getCell = (cells, index) => (index >= 0 && index < cells.length ? cells[index].trim() : "");
+      return rawLines.slice(1)
+        .map((line, index) => {
+          const cells = line.split(";").map((cell) => cell.trim());
+          const label = normalizeTemplateTextCell(getCell(cells, indices.label)) || `Vorlage ${index + 1}`;
+          const customerName = normalizeTemplateTextCell(getCell(cells, indices.customerName));
+          const projectPrefix = parseTemplateProjectYear(normalizeTemplateTextCell(getCell(cells, indices.projectPrefix)));
+          const projectSuffix = parseTemplateProjectSuffix(normalizeTemplateTextCell(getCell(cells, indices.projectSuffix)));
+          const costCenterRaw = normalizeTemplateTextCell(getCell(cells, indices.costCenter)).toUpperCase();
+          const costCenterMatch = costCenterRaw.match(/\b[A-Z]{3}\b/);
+          const activity = normalizeTemplateTextCell(getCell(cells, indices.activity));
+          const startTime = normalizeTemplateTextCell(getCell(cells, indices.startTime));
+          const endTime = normalizeTemplateTextCell(getCell(cells, indices.endTime));
+          const breakMinutes = normalizeTemplateTextCell(getCell(cells, indices.breakMinutes));
+          const hours = normalizeTemplateTextCell(getCell(cells, indices.hours));
+          return {
+            id: `tpl-${index}`,
+            label,
+            customerName,
+            projectPrefix,
+            projectSuffix,
+            costCenter: costCenterMatch ? costCenterMatch[0] : costCenterRaw,
+            isByEffort: parseTemplateBool(getCell(cells, indices.isByEffort)),
+            activity,
+            startTime,
+            endTime,
+            breakMinutes,
+            hours
+          };
+        })
+        .filter((item) => item.label);
+    }
+
+    function renderTemplateButtons() {
+      if (!templateButtons) return;
+      if (!templates.length) {
+        templateButtons.innerHTML = '<span class="muted">Keine Vorlagen geladen.</span>';
+        return;
+      }
+      templateButtons.innerHTML = templates
+        .map((tpl) => `<button type="button" class="template-btn" data-template-id="${escapeHtml(tpl.id)}">${escapeHtml(tpl.label)}</button>`)
+        .join("");
+    }
+
+    function applyTemplate(templateId) {
+      const tpl = templates.find((item) => item.id === templateId);
+      if (!tpl) return;
+
+      customerNameInput.value = tpl.customerName || "";
+      if (tpl.projectPrefix) {
+        setYearButtonValue(projectYearButton, tpl.projectPrefix, dateInput.value);
+      }
+      projectSuffixInput.value = sanitizeDigits(tpl.projectSuffix || "", 3);
+      costCenterInput.value = tpl.costCenter || "";
+      isByEffortInput.checked = typeof tpl.isByEffort === "boolean" ? tpl.isByEffort : false;
+      activityInput.value = tpl.activity || "";
+      startTimeInput.value = tpl.startTime || "";
+      endTimeInput.value = tpl.endTime || "";
+      breakMinutesInput.value = tpl.breakMinutes || "0";
+      hoursInput.value = tpl.hours || "";
+
+      syncMainProjectNumber();
+      autoGrowActivity();
+      render();
+      if (!costPickerBackdrop.hidden) {
+        closeCostPickerDialog();
+      }
+      setFormMessage(`Vorlage "${tpl.label}" angewendet.`, false);
+    }
+
+    async function loadTemplatesFromCsv() {
+      renderTemplateButtons();
+      try {
+        const response = await fetch(TEMPLATE_CSV_FILE, { cache: "no-store" });
+        if (!response.ok) throw new Error(`CSV nicht gefunden (${response.status})`);
+        const text = await response.text();
+        const parsed = parseTemplateCsv(text);
+        if (parsed.length > 0) {
+          templates = parsed;
+          renderTemplateButtons();
+          return;
+        }
+      } catch {
+        // Fallback: ohne CSV bleiben nur Default-Vorlagen aktiv.
+      }
+      renderTemplateButtons();
+    }
+
+    function buildDraftEntryFromInputs() {
+      syncMainProjectNumber();
+      const hours = parseDecimal(hoursInput.value);
+      const breakMinutes = parseBreakMinutes(breakMinutesInput.value);
+      return {
+        date: dateInput.value || "",
+        employeeCode: sanitizeEmployeeCode(employeeCodeInput.value),
+        startTime: startTimeInput.value || "",
+        endTime: endTimeInput.value || "",
+        breakMinutes: Number.isFinite(breakMinutes) ? breakMinutes : "",
+        customerName: customerNameInput.value.trim(),
+        projectNumber: normalizeOptionalProjectNumber(projectNumberInput.value, dateInput.value),
+        costCenter: costCenterInput.value.trim(),
+        isByEffort: Boolean(isByEffortInput.checked),
+        hours: Number.isFinite(hours) && hours > 0 ? hours : "",
+        activity: activityInput.value.trim()
+      };
+    }
+
+    function hasDraftContent(entry) {
+      if (!entry) return false;
+      const hasProject = isValidProjectNumber(entry.projectNumber);
+      return [
+        entry.employeeCode,
+        entry.startTime,
+        entry.endTime,
+        entry.customerName,
+        entry.costCenter,
+        entry.activity,
+        entry.hours
+      ].some((value) => String(value ?? "").trim() !== "")
+        || hasProject
+        || Boolean(entry.isByEffort);
+    }
+
     function getExportSubject(scope, exportEntries) {
       const dateToken = formatIsoToGerman(dateInput.value || "");
       const employeeCode = pickSubjectValue(
@@ -1014,7 +1904,9 @@
         "Pause (Min)",
         "Endzeit",
         "Kundenname",
-        "Projektnummer",
+        "Vorgangsnr.",
+        "Kostenstelle",
+        "Nach Aufwand?",
         "Stunden",
         "Tätigkeit"
       ];
@@ -1029,10 +1921,12 @@
           sanitizeTsvCell(entry.date),
           sanitizeTsvCell(entry.employeeCode),
           sanitizeTsvCell(entry.startTime || ""),
-          sanitizeTsvCell(String(entry.breakMinutes ?? 0).replace(".", ",")),
+          sanitizeTsvCell(formatBreakMinutesExport(entry.breakMinutes)),
           sanitizeTsvCell(entry.endTime || ""),
           sanitizeTsvCell(entry.customerName),
           sanitizeTsvCell(entry.projectNumber),
+          sanitizeTsvCell(entry.costCenter || ""),
+          sanitizeTsvCell(formatByEffortExport(Boolean(entry.isByEffort))),
           sanitizeTsvCell(formatHoursExport(entry.hours)),
           sanitizeTsvCell(entry.activity)
         ]);
@@ -1101,11 +1995,11 @@
     }
 
     function sendSimpleMailForDay() {
-      const exportEntries = getEntriesForExport("day");
-      if (exportEntries.length === 0) {
-        alert("Keine Einträge für den gewählten Tag.");
-        return;
-      }
+      const dayEntries = getEntriesForExport("day");
+      const draftEntry = buildDraftEntryFromInputs();
+      const exportEntries = dayEntries.length > 0
+        ? dayEntries
+        : (hasDraftContent(draftEntry) ? [draftEntry] : []);
 
       const subject = getExportSubject("day", exportEntries);
       const body = buildExportTsv(exportEntries);
@@ -1121,7 +2015,8 @@
       event.preventDefault();
 
       try {
-        const hours = parseDecimal(hoursInput.value);
+        syncMainProjectNumber();
+        const parsedHours = parseDecimal(hoursInput.value);
         const breakMinutes = parseBreakMinutes(breakMinutesInput.value);
 
         const entry = {
@@ -1133,8 +2028,10 @@
           endTime: endTimeInput.value,
           breakMinutes,
           customerName: customerNameInput.value.trim(),
-          projectNumber: projectNumberInput.value.trim(),
-          hours,
+          projectNumber: normalizeOptionalProjectNumber(projectNumberInput.value, dateInput.value),
+          costCenter: costCenterInput.value.trim(),
+          isByEffort: Boolean(isByEffortInput.checked),
+          hours: Number.isFinite(parsedHours) && parsedHours > 0 ? parsedHours : "",
           activity: activityInput.value.trim()
         };
 
@@ -1152,7 +2049,7 @@
         activityInput.value = "";
         autoGrowActivity();
         activityInput.focus();
-        setFormMessage(`Eintrag gespeichert (${fmtHours(hours)} h).`, false);
+        setFormMessage("Eintrag gespeichert.", false);
       } catch (error) {
         console.error(error);
         setFormMessage("Speichern fehlgeschlagen. Browser bitte neu laden.", true);
@@ -1199,6 +2096,37 @@
     copyExportButton.addEventListener("click", copyExportContent);
     mailExportButton.addEventListener("click", openExportMail);
     exportCancelButton.addEventListener("click", closeExportDialog);
+    closeCostPickerButton.addEventListener("click", closeCostPickerDialog);
+    yearPickerCancelButton.addEventListener("click", closeYearPicker);
+
+    projectYearButton.addEventListener("click", () => openYearPicker("main"));
+    editProjectYearButton.addEventListener("click", () => openYearPicker("edit"));
+
+    costCenterInput.addEventListener("click", () => openCostPicker(costCenterInput));
+    editCostCenterInput.addEventListener("click", () => openCostPicker(editCostCenterInput));
+
+    yearPickerDialog.addEventListener("click", (event) => {
+      if (event.target === yearPickerDialog) closeYearPicker();
+    });
+    yearPickerOptions.addEventListener("click", (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLButtonElement)) return;
+      const yearToken = target.dataset.year || "";
+      if (!yearToken) return;
+      applyYearFromPicker(yearToken);
+    });
+
+    costPickerBackdrop.addEventListener("click", (event) => {
+      if (event.target === costPickerBackdrop) closeCostPickerDialog();
+    });
+    costPickerBackdrop.querySelectorAll(".cost-picker-item").forEach((button) => {
+      button.addEventListener("click", () => {
+        const code = button.dataset.code || "";
+        if (!costPickerTargetInput) return;
+        costPickerTargetInput.value = code;
+        closeCostPickerDialog();
+      });
+    });
 
     editSaveButton.addEventListener("click", () => {
       if (!editingEntryId) return;
@@ -1209,6 +2137,8 @@
         return;
       }
 
+      syncEditProjectNumber();
+
       const updated = {
         ...existing,
         date: editDateInput.value,
@@ -1216,9 +2146,14 @@
         startTime: editStartTimeInput.value,
         endTime: editEndTimeInput.value,
         breakMinutes: parseBreakMinutes(editBreakMinutesInput.value),
-        hours: parseDecimal(editHoursInput.value),
+        hours: (() => {
+          const parsed = parseDecimal(editHoursInput.value);
+          return Number.isFinite(parsed) && parsed > 0 ? parsed : "";
+        })(),
         customerName: editCustomerNameInput.value.trim(),
-        projectNumber: editProjectNumberInput.value.trim(),
+        projectNumber: normalizeOptionalProjectNumber(editProjectNumberInput.value, editDateInput.value),
+        costCenter: editCostCenterInput.value.trim(),
+        isByEffort: Boolean(editIsByEffortInput.checked),
         activity: editActivityInput.value.trim()
       };
 
@@ -1266,6 +2201,49 @@
       editEmployeeCodeInput.value = sanitizeEmployeeCode(editEmployeeCodeInput.value);
     });
 
+    if (templateButtons) {
+      templateButtons.addEventListener("click", (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLButtonElement)) return;
+        const templateId = target.dataset.templateId || "";
+        if (!templateId) return;
+        applyTemplate(templateId);
+      });
+    }
+
+    function wireZeroPrefillClear(input) {
+      input.addEventListener("focus", () => {
+        const normalized = String(input.value || "").trim().replace(",", ".");
+        if (normalized === "0" || /^0\.0+$/.test(normalized)) {
+          input.value = "";
+        }
+      });
+    }
+
+    function wirePlaceholderHideOnFocus(input) {
+      const initialPlaceholder = input.getAttribute("placeholder") || "";
+      if (!initialPlaceholder) return;
+      input.addEventListener("focus", () => {
+        input.setAttribute("placeholder", "");
+      });
+      input.addEventListener("blur", () => {
+        if (!input.getAttribute("placeholder")) {
+          input.setAttribute("placeholder", initialPlaceholder);
+        }
+      });
+    }
+    wireZeroPrefillClear(breakMinutesInput);
+    wireZeroPrefillClear(editBreakMinutesInput);
+    wirePlaceholderHideOnFocus(breakMinutesInput);
+    wirePlaceholderHideOnFocus(editBreakMinutesInput);
+    wirePlaceholderHideOnFocus(projectSuffixInput);
+    wirePlaceholderHideOnFocus(editProjectSuffixInput);
+
+    wireProjectSuffixInput(projectSuffixInput, syncMainProjectNumber);
+    wireProjectSuffixInput(editProjectSuffixInput, syncEditProjectNumber);
+
+    editDateInput.addEventListener("change", syncEditProjectNumber);
+
     startTimeInput.addEventListener("blur", () => {
       startTimeInput.value = normalizeTimeInputValue(startTimeInput.value);
       render();
@@ -1285,6 +2263,7 @@
     endTimeInput.addEventListener("change", render);
     breakMinutesInput.addEventListener("input", render);
 
+    loadTemplatesFromCsv();
     autoGrowActivity();
     render();
   </script>
