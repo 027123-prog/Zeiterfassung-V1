@@ -10,9 +10,9 @@
       --text: #0f172a;
       --muted: #64748b;
       --border: #d7e0ec;
-      --accent: #0f766e;
-      --accent-2: #1d4ed8;
-      --danger: #b91c1c;
+      --accent: #4f9a93;
+      --accent-2: #6d8fd6;
+      --danger: #d16a6a;
       --radius: 14px;
       --ok-bg: #ecfdf3;
       --ok-fg: #166534;
@@ -141,6 +141,34 @@
       text-align: center;
       font-weight: 700;
       letter-spacing: 0.04em;
+    }
+
+    .cost-center-wrap {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .cost-center-wrap input {
+      text-transform: uppercase;
+    }
+
+    .cost-center-pick-btn {
+      min-height: 38px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      color: #1e293b;
+      padding: 7px 10px;
+      font: inherit;
+      font-weight: 700;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .cost-center-pick-btn:hover {
+      background: #f8fafc;
     }
 
     .project-year-btn {
@@ -539,7 +567,7 @@
 
     .cost-picker-groups {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 4px;
     }
 
@@ -572,6 +600,27 @@
 
     .cost-picker-section.other .cost-picker-grid {
       grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 4px;
+    }
+
+    .cost-picker-subgroup {
+      display: grid;
+      gap: 4px;
+      margin-top: 4px;
+      padding-top: 4px;
+      border-top: 1px dashed rgba(15, 23, 42, 0.2);
+    }
+
+    .cost-picker-subgroup h5 {
+      margin: 0;
+      font-size: 11px;
+      line-height: 1.2;
+      color: #334155;
+    }
+
+    .cost-picker-grid-horizontal {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 4px;
     }
 
@@ -659,7 +708,10 @@
 
           <div class="form-row">
             <label>Kostenstelle
-              <input id="costCenter" type="text" maxlength="60" placeholder="Code wählen (z. B. FWS)" readonly />
+              <div class="cost-center-wrap">
+                <input id="costCenter" type="text" maxlength="3" inputmode="text" autocapitalize="characters" spellcheck="false" placeholder="Code tippen (z. B. FWS)" />
+                <button id="pickCostCenterMain" type="button" class="cost-center-pick-btn">Auswahl</button>
+              </div>
             </label>
             <label>Nach Aufwand?
               <span class="inline-check">
@@ -762,7 +814,10 @@
         </div>
         <div class="form-row">
           <label>Kostenstelle
-            <input id="editCostCenter" type="text" maxlength="60" placeholder="Code wählen (z. B. FWS)" readonly />
+            <div class="cost-center-wrap">
+              <input id="editCostCenter" type="text" maxlength="3" inputmode="text" autocapitalize="characters" spellcheck="false" placeholder="Code tippen (z. B. FWS)" />
+              <button id="pickCostCenterEdit" type="button" class="cost-center-pick-btn">Auswahl</button>
+            </div>
           </label>
           <label>Nach Aufwand?
             <span class="inline-check">
@@ -837,6 +892,7 @@
             <button class="cost-picker-item" type="button" data-code="DWS" data-label="Dämmung/Lehm WS"><small>Werkstatt</small><span class="cost-picker-code">DWS</span></button>
           </div>
         </section>
+
       </div>
 
       <section class="cost-picker-section other">
@@ -845,9 +901,18 @@
           <button class="cost-picker-item" type="button" data-code="REK" data-label="Reklamation"><small>Reklamation</small><span class="cost-picker-code">REK</span></button>
           <button class="cost-picker-item" type="button" data-code="WAR" data-label="Wartung"><small>Wartung</small><span class="cost-picker-code">WAR</span></button>
           <button class="cost-picker-item" type="button" data-code="KRS" data-label="Innerbetriebliche Kleinaufträge"><small>Kleinaufträge</small><span class="cost-picker-code">KRS</span></button>
+          <button class="cost-picker-item" type="button" data-code="HRS" data-label="Arbeiten im Zusammenhang mit Handel"><small>Handel</small><span class="cost-picker-code">HRS</span></button>
           <button class="cost-picker-item" type="button" data-code="SIU" data-label="Schulung im Untern."><small>Schulung</small><span class="cost-picker-code">SIU</span></button>
           <button class="cost-picker-item" type="button" data-code="ORD" data-label="Ordnung"><small>Ordnung</small><span class="cost-picker-code">ORD</span></button>
           <button class="cost-picker-item" type="button" data-code="KDB" data-label="Kosten der Beschaffung"><small>Beschaffung</small><span class="cost-picker-code">KDB</span></button>
+        </div>
+        <div class="cost-picker-subgroup">
+          <h5>Büro</h5>
+          <div class="cost-picker-grid-horizontal">
+            <button class="cost-picker-item" type="button" data-code="AVB" data-label="Arbeitsvorbereitung"><small>Arbeitsvorbereitung</small><span class="cost-picker-code">AVB</span></button>
+            <button class="cost-picker-item" type="button" data-code="CAD" data-label="Zeichnung"><small>Zeichnung</small><span class="cost-picker-code">CAD</span></button>
+            <button class="cost-picker-item" type="button" data-code="BST" data-label="Baustellentermin"><small>Baustellentermin</small><span class="cost-picker-code">BST</span></button>
+          </div>
         </div>
       </section>
 
@@ -908,9 +973,9 @@
       },
       {
         id: "tpl-inline-4",
-        label: "Kleinaufträge",
+        label: "Kleinauftrage",
         customerName: "RS",
-        projectPrefix: "",
+        projectPrefix: "26",
         projectSuffix: "016",
         costCenter: "IWS",
         isByEffort: false,
@@ -924,7 +989,7 @@
         id: "tpl-inline-5",
         label: "Muster",
         customerName: "RS",
-        projectPrefix: "",
+        projectPrefix: "26",
         projectSuffix: "017",
         costCenter: "IWS",
         isByEffort: false,
@@ -938,11 +1003,25 @@
         id: "tpl-inline-6",
         label: "Werkstatteinrichtung",
         customerName: "RS",
-        projectPrefix: "",
+        projectPrefix: "26",
         projectSuffix: "034",
         costCenter: "IWS",
         isByEffort: false,
         activity: "Werkstatteinrichtung:",
+        startTime: "",
+        endTime: "",
+        breakMinutes: "",
+        hours: ""
+      },
+      {
+        id: "tpl-inline-7",
+        label: "Auro-Online",
+        customerName: "RS",
+        projectPrefix: "24",
+        projectSuffix: "322",
+        costCenter: "HAU",
+        isByEffort: false,
+        activity: "Auro Online",
         startTime: "",
         endTime: "",
         breakMinutes: "",
@@ -1004,6 +1083,8 @@
     const yearPickerCancelButton = document.getElementById("yearPickerCancel");
     const costPickerBackdrop = document.getElementById("costPickerBackdrop");
     const closeCostPickerButton = document.getElementById("closeCostPicker");
+    const pickCostCenterMainButton = document.getElementById("pickCostCenterMain");
+    const pickCostCenterEditButton = document.getElementById("pickCostCenterEdit");
 
     let inMemoryEntries = [];
     let localStorageEnabled = canUseLocalStorage();
@@ -1101,6 +1182,13 @@
       return String(rawValue || "")
         .toUpperCase()
         .replace(/[^A-ZÄÖÜ]/g, "");
+    }
+
+    function sanitizeCostCenter(rawValue) {
+      return String(rawValue || "")
+        .toUpperCase()
+        .replace(/[^A-Z0-9]/g, "")
+        .slice(0, 3);
     }
 
     function getYearTwoFromIso(dateIso) {
@@ -1399,7 +1487,7 @@
       editBreakMinutesInput.value = String(entry.breakMinutes ?? 0).replace(".", ",");
       editHoursInput.value = Number.isFinite(Number(entry.hours)) ? String(entry.hours).replace(".", ",") : "";
       editCustomerNameInput.value = entry.customerName || "";
-      editCostCenterInput.value = entry.costCenter || "";
+      editCostCenterInput.value = sanitizeCostCenter(entry.costCenter || "");
       editIsByEffortInput.checked = Boolean(entry.isByEffort);
       setEditProjectParts(entry.projectNumber || "", entry.date || dateInput.value);
       editActivityInput.value = entry.activity || "";
@@ -1616,7 +1704,7 @@
       breakMinutesInput.value = String(last.breakMinutes ?? 0);
       hoursInput.value = Number.isFinite(Number(last.hours)) ? String(last.hours).replace(".", ",") : "";
       customerNameInput.value = last.customerName || "";
-      costCenterInput.value = last.costCenter || "";
+      costCenterInput.value = sanitizeCostCenter(last.costCenter || "");
       isByEffortInput.checked = Boolean(last.isByEffort);
       setMainProjectParts(last.projectNumber || "", dateInput.value);
       activityInput.value = "";
@@ -1810,7 +1898,7 @@
         setYearButtonValue(projectYearButton, tpl.projectPrefix, dateInput.value);
       }
       projectSuffixInput.value = sanitizeDigits(tpl.projectSuffix || "", 3);
-      costCenterInput.value = tpl.costCenter || "";
+      costCenterInput.value = sanitizeCostCenter(tpl.costCenter || "");
       isByEffortInput.checked = typeof tpl.isByEffort === "boolean" ? tpl.isByEffort : false;
       activityInput.value = tpl.activity || "";
       startTimeInput.value = tpl.startTime || "";
@@ -1857,7 +1945,7 @@
         breakMinutes: Number.isFinite(breakMinutes) ? breakMinutes : "",
         customerName: customerNameInput.value.trim(),
         projectNumber: normalizeOptionalProjectNumber(projectNumberInput.value, dateInput.value),
-        costCenter: costCenterInput.value.trim(),
+        costCenter: sanitizeCostCenter(costCenterInput.value),
         isByEffort: Boolean(isByEffortInput.checked),
         hours: Number.isFinite(hours) && hours > 0 ? hours : "",
         activity: activityInput.value.trim()
@@ -2029,7 +2117,7 @@
           breakMinutes,
           customerName: customerNameInput.value.trim(),
           projectNumber: normalizeOptionalProjectNumber(projectNumberInput.value, dateInput.value),
-          costCenter: costCenterInput.value.trim(),
+          costCenter: sanitizeCostCenter(costCenterInput.value),
           isByEffort: Boolean(isByEffortInput.checked),
           hours: Number.isFinite(parsedHours) && parsedHours > 0 ? parsedHours : "",
           activity: activityInput.value.trim()
@@ -2102,8 +2190,12 @@
     projectYearButton.addEventListener("click", () => openYearPicker("main"));
     editProjectYearButton.addEventListener("click", () => openYearPicker("edit"));
 
-    costCenterInput.addEventListener("click", () => openCostPicker(costCenterInput));
-    editCostCenterInput.addEventListener("click", () => openCostPicker(editCostCenterInput));
+    if (pickCostCenterMainButton) {
+      pickCostCenterMainButton.addEventListener("click", () => openCostPicker(costCenterInput));
+    }
+    if (pickCostCenterEditButton) {
+      pickCostCenterEditButton.addEventListener("click", () => openCostPicker(editCostCenterInput));
+    }
 
     yearPickerDialog.addEventListener("click", (event) => {
       if (event.target === yearPickerDialog) closeYearPicker();
@@ -2123,7 +2215,7 @@
       button.addEventListener("click", () => {
         const code = button.dataset.code || "";
         if (!costPickerTargetInput) return;
-        costPickerTargetInput.value = code;
+        costPickerTargetInput.value = sanitizeCostCenter(code);
         closeCostPickerDialog();
       });
     });
@@ -2152,7 +2244,7 @@
         })(),
         customerName: editCustomerNameInput.value.trim(),
         projectNumber: normalizeOptionalProjectNumber(editProjectNumberInput.value, editDateInput.value),
-        costCenter: editCostCenterInput.value.trim(),
+        costCenter: sanitizeCostCenter(editCostCenterInput.value),
         isByEffort: Boolean(editIsByEffortInput.checked),
         activity: editActivityInput.value.trim()
       };
@@ -2199,6 +2291,12 @@
     });
     editEmployeeCodeInput.addEventListener("input", () => {
       editEmployeeCodeInput.value = sanitizeEmployeeCode(editEmployeeCodeInput.value);
+    });
+    costCenterInput.addEventListener("input", () => {
+      costCenterInput.value = sanitizeCostCenter(costCenterInput.value);
+    });
+    editCostCenterInput.addEventListener("input", () => {
+      editCostCenterInput.value = sanitizeCostCenter(editCostCenterInput.value);
     });
 
     if (templateButtons) {
