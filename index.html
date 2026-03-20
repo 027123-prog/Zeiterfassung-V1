@@ -491,6 +491,10 @@
       overflow: auto;
     }
 
+    .edit-dialog .edit-day-fields {
+      display: none !important;
+    }
+
     .year-picker-dialog {
       width: min(100%, 320px);
     }
@@ -683,7 +687,7 @@
                 <input id="startTime" type="time" />
               </label>
               <label>Pause (Minuten)
-                <input id="breakMinutes" type="text" inputmode="decimal" placeholder="z. B. 30" value="0" />
+                <input id="breakMinutes" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="z. B. 45" value="0" />
               </label>
               <label>Endzeit
                 <input id="endTime" type="time" />
@@ -775,7 +779,7 @@
       <h3>Eintrag bearbeiten</h3>
       <p class="muted">Änderungen speichern oder Eintrag löschen.</p>
       <div class="form-grid">
-        <div class="form-row">
+        <div class="form-row edit-day-fields">
           <label>Datum
             <input id="editDate" type="date" />
           </label>
@@ -783,7 +787,7 @@
             <input id="editEmployeeCode" type="text" maxlength="20" autocomplete="off" autocapitalize="characters" spellcheck="false" />
           </label>
         </div>
-        <div class="form-row">
+        <div class="form-row edit-day-fields">
           <label>Anfangszeit
             <input id="editStartTime" type="time" />
           </label>
@@ -792,7 +796,7 @@
           </label>
         </div>
         <div class="form-row">
-          <label>Pause (Minuten)
+          <label class="edit-day-fields">Pause (Minuten)
             <input id="editBreakMinutes" type="text" inputmode="decimal" />
           </label>
           <label>Stunden
@@ -1100,6 +1104,11 @@
     dateInput.value = getLocalDateISO();
 
     let entries = loadEntries();
+    const normalizedLoadedEntries = normalizeLoadedDaySharedFields(entries);
+    if (normalizedLoadedEntries.changed) {
+      entries = normalizedLoadedEntries.entries;
+      saveEntries();
+    }
     hydrateInputsForDate();
 
     function getLocalDateISO() {
@@ -1175,7 +1184,109 @@
     function parseBreakMinutes(rawValue) {
       const text = String(rawValue || "").trim();
       if (text === "") return 0;
-      return parseDecimal(text);
+      if (!/^\d+$/.test(text)) return NaN;
+      return Number(text);
+    }
+
+    function normalizeBreakMinutesValue(value) {
+      const text = String(value ?? "").trim();
+      if (text === "") return 0;
+
+      const normalized = text.replace(",", ".");
+      const parsed = Number(normalized);
+      if (!Number.isFinite(parsed) || parsed < 0) return 0;
+      if (Number.isInteger(parsed)) return parsed;
+
+      // Legacy correction: old exports used decimal hours for break.
+      const asMinutesFromHours = parsed * 60;
+      if (parsed <= 2 && Math.abs(asMinutesFromHours - Math.round(asMinutesFromHours)) < 1e-6) {
+        return Math.round(asMinutesFromHours);
+      }
+
+      return Math.round(parsed);
+    }
+
+    function buildDayEntryGroupKey(entry) {
+      const date = String((entry && entry.date) || "").trim();
+      const employeeCode = sanitizeEmployeeCode((entry && entry.employeeCode) || "");
+      return `${date}|${employeeCode || "_"}`;
+    }
+
+    function normalizeLoadedDaySharedFields(sourceEntries) {
+      const list = Array.isArray(sourceEntries) ? sourceEntries : [];
+      const latestByGroup = new Map();
+      list.forEach((entry, index) => {
+        const key = buildDayEntryGroupKey(entry);
+        const stamp = Number(entry && entry.createdAt);
+        const order = Number.isFinite(stamp) ? stamp : index;
+        const prev = latestByGroup.get(key);
+        if (!prev || order >= prev.order) {
+          latestByGroup.set(key, {
+            order,
+            startTime: String((entry && entry.startTime) || ""),
+            endTime: String((entry && entry.endTime) || ""),
+            breakMinutes: normalizeBreakMinutesValue(entry && entry.breakMinutes)
+          });
+        }
+      });
+
+      let changed = false;
+      const normalized = list.map((entry) => {
+        const key = buildDayEntryGroupKey(entry);
+        const shared = latestByGroup.get(key);
+        if (!shared) return entry;
+        const currentStart = String((entry && entry.startTime) || "");
+        const currentEnd = String((entry && entry.endTime) || "");
+        const currentBreak = normalizeBreakMinutesValue(entry && entry.breakMinutes);
+        const rawBreak = String((entry && entry.breakMinutes) ?? "").trim();
+        const canonicalBreak = String(shared.breakMinutes);
+        if (
+          currentStart === shared.startTime
+          && currentEnd === shared.endTime
+          && currentBreak === shared.breakMinutes
+          && rawBreak === canonicalBreak
+        ) {
+          return entry;
+        }
+        changed = true;
+        return {
+          ...entry,
+          startTime: shared.startTime,
+          endTime: shared.endTime,
+          breakMinutes: shared.breakMinutes
+        };
+      });
+
+      return { entries: normalized, changed };
+    }
+
+    function synchronizeDaySharedFields(baseEntry) {
+      const groupKey = buildDayEntryGroupKey(baseEntry);
+      const sharedStart = String((baseEntry && baseEntry.startTime) || "");
+      const sharedEnd = String((baseEntry && baseEntry.endTime) || "");
+      const sharedBreak = normalizeBreakMinutesValue(baseEntry && baseEntry.breakMinutes);
+      entries = entries.map((entry) => {
+        if (buildDayEntryGroupKey(entry) !== groupKey) return entry;
+        const currentStart = String((entry && entry.startTime) || "");
+        const currentEnd = String((entry && entry.endTime) || "");
+        const currentBreak = normalizeBreakMinutesValue(entry && entry.breakMinutes);
+        const rawBreak = String((entry && entry.breakMinutes) ?? "").trim();
+        const canonicalBreak = String(sharedBreak);
+        if (
+          currentStart === sharedStart
+          && currentEnd === sharedEnd
+          && currentBreak === sharedBreak
+          && rawBreak === canonicalBreak
+        ) {
+          return entry;
+        }
+        return {
+          ...entry,
+          startTime: sharedStart,
+          endTime: sharedEnd,
+          breakMinutes: sharedBreak
+        };
+      });
     }
 
     function sanitizeEmployeeCode(rawValue) {
@@ -1441,8 +1552,8 @@
         return "Vorgangsnr. bitte im Format 26VG0128 eingeben. Du kannst auch nur die letzten 3 Ziffern eingeben.";
       }
 
-      if (!Number.isFinite(entry.breakMinutes) || entry.breakMinutes < 0) {
-        return "Pause bitte als gültige Zahl in Minuten eingeben.";
+      if (!Number.isFinite(entry.breakMinutes) || entry.breakMinutes < 0 || !Number.isInteger(entry.breakMinutes)) {
+        return "Pause bitte als ganze Minuten eingeben (z. B. 45).";
       }
 
       if (entry.startTime && entry.endTime) {
@@ -1484,7 +1595,7 @@
       editEmployeeCodeInput.value = sanitizeEmployeeCode(entry.employeeCode || "");
       editStartTimeInput.value = entry.startTime || "";
       editEndTimeInput.value = entry.endTime || "";
-      editBreakMinutesInput.value = String(entry.breakMinutes ?? 0).replace(".", ",");
+      editBreakMinutesInput.value = String(normalizeBreakMinutesValue(entry.breakMinutes ?? 0));
       editHoursInput.value = Number.isFinite(Number(entry.hours)) ? String(entry.hours).replace(".", ",") : "";
       editCustomerNameInput.value = entry.customerName || "";
       editCostCenterInput.value = sanitizeCostCenter(entry.costCenter || "");
@@ -1701,7 +1812,7 @@
       employeeCodeInput.value = sanitizeEmployeeCode(last.employeeCode || "");
       startTimeInput.value = last.startTime || "";
       endTimeInput.value = last.endTime || "";
-      breakMinutesInput.value = String(last.breakMinutes ?? 0);
+      breakMinutesInput.value = String(normalizeBreakMinutesValue(last.breakMinutes ?? 0));
       hoursInput.value = Number.isFinite(Number(last.hours)) ? String(last.hours).replace(".", ",") : "";
       customerNameInput.value = last.customerName || "";
       costCenterInput.value = sanitizeCostCenter(last.costCenter || "");
@@ -1727,9 +1838,8 @@
     }
 
     function formatBreakMinutesExport(value) {
-      const num = Number(value);
-      if (!Number.isFinite(num)) return "";
-      return String(num).replace(".", ",");
+      if (value === "" || value == null) return "";
+      return String(normalizeBreakMinutesValue(value));
     }
 
     function formatByEffortExport(value) {
@@ -1760,6 +1870,18 @@
       if (values.length === 0) return fallbackValue;
       if (values.length === 1) return values[0];
       return "Mehrere";
+    }
+
+    function pickSubjectValueJoined(entries, fieldName, fallbackValue) {
+      const values = Array.from(
+        new Set(
+          entries
+            .map((entry) => sanitizeSubjectPart(entry[fieldName]))
+            .filter(Boolean)
+        )
+      );
+      if (values.length === 0) return fallbackValue;
+      return values.join(", ");
     }
 
     function sanitizeTsvCell(value) {
@@ -1901,9 +2023,12 @@
       costCenterInput.value = sanitizeCostCenter(tpl.costCenter || "");
       isByEffortInput.checked = typeof tpl.isByEffort === "boolean" ? tpl.isByEffort : false;
       activityInput.value = tpl.activity || "";
-      startTimeInput.value = tpl.startTime || "";
-      endTimeInput.value = tpl.endTime || "";
-      breakMinutesInput.value = tpl.breakMinutes || "0";
+      const tplStart = String(tpl.startTime || "").trim();
+      const tplEnd = String(tpl.endTime || "").trim();
+      const tplBreak = String(tpl.breakMinutes ?? "").trim();
+      if (tplStart) startTimeInput.value = normalizeTimeInputValue(tplStart);
+      if (tplEnd) endTimeInput.value = normalizeTimeInputValue(tplEnd);
+      if (tplBreak !== "") breakMinutesInput.value = String(normalizeBreakMinutesValue(tplBreak));
       hoursInput.value = tpl.hours || "";
 
       syncMainProjectNumber();
@@ -1975,13 +2100,13 @@
         "employeeCode",
         sanitizeEmployeeCode(employeeCodeInput.value) || "XX"
       );
-      const customerName = pickSubjectValue(
+      const customerNameJoined = pickSubjectValueJoined(
         exportEntries,
         "customerName",
         sanitizeSubjectPart(customerNameInput.value) || "Unbekannt"
       );
 
-      return `${sanitizeEmployeeCode(employeeCode)} ${dateToken} Stundenzettel ${customerName}`.trim();
+      return `${sanitizeEmployeeCode(employeeCode)} ${dateToken} Stundenzettel ${customerNameJoined}`.trim();
     }
 
     function buildExportTsv(source) {
@@ -2012,8 +2137,8 @@
           sanitizeTsvCell(formatBreakMinutesExport(entry.breakMinutes)),
           sanitizeTsvCell(entry.endTime || ""),
           sanitizeTsvCell(entry.customerName),
-          sanitizeTsvCell(entry.projectNumber),
-          sanitizeTsvCell(entry.costCenter || ""),
+          sanitizeTsvCell(entry.projectNumber || "-"),
+          sanitizeTsvCell((entry.costCenter || "").trim() || "-"),
           sanitizeTsvCell(formatByEffortExport(Boolean(entry.isByEffort))),
           sanitizeTsvCell(formatHoursExport(entry.hours)),
           sanitizeTsvCell(entry.activity)
@@ -2130,6 +2255,7 @@
         }
 
         entries.push(entry);
+        synchronizeDaySharedFields(entry);
         saveEntries();
         render();
 
@@ -2233,17 +2359,17 @@
 
       const updated = {
         ...existing,
-        date: editDateInput.value,
-        employeeCode: sanitizeEmployeeCode(editEmployeeCodeInput.value),
-        startTime: editStartTimeInput.value,
-        endTime: editEndTimeInput.value,
-        breakMinutes: parseBreakMinutes(editBreakMinutesInput.value),
+        date: existing.date,
+        employeeCode: sanitizeEmployeeCode(existing.employeeCode),
+        startTime: existing.startTime || "",
+        endTime: existing.endTime || "",
+        breakMinutes: normalizeBreakMinutesValue(existing.breakMinutes),
         hours: (() => {
           const parsed = parseDecimal(editHoursInput.value);
           return Number.isFinite(parsed) && parsed > 0 ? parsed : "";
         })(),
         customerName: editCustomerNameInput.value.trim(),
-        projectNumber: normalizeOptionalProjectNumber(editProjectNumberInput.value, editDateInput.value),
+        projectNumber: normalizeOptionalProjectNumber(editProjectNumberInput.value, existing.date),
         costCenter: sanitizeCostCenter(editCostCenterInput.value),
         isByEffort: Boolean(editIsByEffortInput.checked),
         activity: editActivityInput.value.trim()
@@ -2256,6 +2382,7 @@
       }
 
       entries = entries.map((entry) => (entry.id === editingEntryId ? updated : entry));
+      synchronizeDaySharedFields(updated);
       saveEntries();
       closeEditDialog();
       render();
