@@ -66,6 +66,26 @@
       line-height: 1.2;
     }
 
+    .app-title {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .version-chip {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      color: #475569;
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
     .muted {
       margin: 0;
       color: var(--muted);
@@ -693,7 +713,7 @@
 <body>
   <main class="app">
     <section class="panel">
-      <h1>Stundenerfassung</h1>
+      <h1 class="app-title">Stundenerfassung <span id="appVersionBadge" class="version-chip"></span></h1>
 
       <form id="entryForm">
         <div class="form-grid">
@@ -703,7 +723,7 @@
             </label>
 
             <label>Mitarbeiterkürzel
-              <input id="employeeCode" type="text" maxlength="20" autocomplete="off" autocapitalize="characters" spellcheck="false" />
+              <input id="employeeCode" type="text" maxlength="20" autocomplete="off" autocapitalize="characters" spellcheck="false" required />
             </label>
           </div>
 
@@ -954,6 +974,7 @@
   </div>
 
   <script>
+    const APP_VERSION = "v2026.03.26-1";
     const STORAGE_KEY = "time_entries_mail_v4";
     const OFFICE_EMAIL = "info@roewekamp-stumpe.de";
     const TEMPLATE_CSV_FILE = "./kostenstelle_vorlagen.csv";
@@ -1116,6 +1137,12 @@
     const closeCostPickerButton = document.getElementById("closeCostPicker");
     const pickCostCenterMainButton = document.getElementById("pickCostCenterMain");
     const pickCostCenterEditButton = document.getElementById("pickCostCenterEdit");
+    const appVersionBadge = document.getElementById("appVersionBadge");
+
+    if (appVersionBadge) {
+      appVersionBadge.textContent = APP_VERSION;
+      document.title = `Stundenerfassung Mobil ${APP_VERSION}`;
+    }
 
     let inMemoryEntries = [];
     let localStorageEnabled = canUseLocalStorage();
@@ -1596,6 +1623,12 @@
       if (!entry.date) {
         return "Bitte ein Datum wählen.";
       }
+
+      const employeeCode = sanitizeEmployeeCode(entry.employeeCode);
+      if (!employeeCode) {
+        return "Mitarbeiterkürzel ist Pflicht.";
+      }
+      entry.employeeCode = employeeCode;
 
       const projectText = String(entry.projectNumber || "").trim().toUpperCase();
       const hasProject = projectText !== "" && !/^\d{2}VG0$/.test(projectText);
@@ -2264,6 +2297,14 @@
       const exportEntries = dayEntries.length > 0
         ? dayEntries
         : (hasDraftContent(draftEntry) ? [draftEntry] : []);
+      const hasMissingEmployeeCode = exportEntries.some((entry) => !sanitizeEmployeeCode(entry && entry.employeeCode));
+      if (hasMissingEmployeeCode) {
+        setFormMessage("Mitarbeiterkürzel ist Pflicht.", true);
+        alert("Bitte Mitarbeiterkürzel ausfüllen, bevor du sendest.");
+        employeeCodeInput.focus();
+        employeeCodeInput.select();
+        return;
+      }
 
       const subject = getExportSubject("day", exportEntries);
       const body = buildExportTsv(exportEntries);
