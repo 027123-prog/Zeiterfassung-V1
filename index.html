@@ -974,8 +974,10 @@
   </div>
 
   <script>
-    const APP_VERSION = "v2026.03.26-1";
+    const APP_VERSION = "V1.2";
     const STORAGE_KEY = "time_entries_mail_v4";
+    const LEGACY_STORAGE_KEYS = ["time_entries_mail_v3", "time_entries_mail_v2", "time_entries_mail_v1", "time_entries_mail"];
+    const MAILTO_MAX_LENGTH = 1800;
     const OFFICE_EMAIL = "info@roewekamp-stumpe.de";
     const TEMPLATE_CSV_FILE = "./kostenstelle_vorlagen.csv";
     // Hosted single-file fallback: templates are embedded here.
@@ -1186,8 +1188,57 @@
     function loadEntries() {
       if (localStorageEnabled) {
         try {
-          const raw = localStorage.getItem(STORAGE_KEY);
-          return raw ? JSON.parse(raw) : [];
+          const readArray = (key) => {
+            const raw = localStorage.getItem(key);
+            if (!raw) return [];
+            const parsed = JSON.parse(raw);
+            return Array.isArray(parsed) ? parsed : [];
+          };
+
+          const dedupeByIdentity = (items) => {
+            const list = Array.isArray(items) ? items : [];
+            const byKey = new Map();
+            list.forEach((entry, index) => {
+              if (!entry || typeof entry !== "object") return;
+              const id = String(entry.id || "").trim();
+              const key = id || [
+                normalizeEntryDateIso(entry.date),
+                sanitizeEmployeeCode(entry.employeeCode || ""),
+                String(entry.customerName || "").trim(),
+                String(entry.projectNumber || "").trim(),
+                sanitizeCostCenter(entry.costCenter || ""),
+                String(entry.hours || "").trim(),
+                String(entry.activity || "").trim(),
+                String(entry.startTime || "").trim(),
+                String(entry.endTime || "").trim(),
+                String(normalizeBreakMinutesValue(entry.breakMinutes ?? ""))
+              ].join("|");
+              const stamp = Number(entry.createdAt || 0);
+              const order = Number.isFinite(stamp) && stamp > 0 ? stamp : index;
+              const prev = byKey.get(key);
+              if (!prev || order >= prev.order) {
+                byKey.set(key, { order, entry });
+              }
+            });
+            return Array.from(byKey.values()).sort((a, b) => a.order - b.order).map((item) => item.entry);
+          };
+
+          const primaryEntries = readArray(STORAGE_KEY);
+          let merged = [...primaryEntries];
+          let legacyFound = false;
+          LEGACY_STORAGE_KEYS.forEach((legacyKey) => {
+            const legacyEntries = readArray(legacyKey);
+            if (legacyEntries.length > 0) {
+              legacyFound = true;
+              merged = merged.concat(legacyEntries);
+            }
+          });
+          const deduped = dedupeByIdentity(merged);
+
+          if (legacyFound && deduped.length !== primaryEntries.length) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(deduped));
+          }
+          return deduped;
         } catch {
           localStorageEnabled = false;
         }
@@ -1284,6 +1335,29 @@
       return Math.round(parsed);
     }
 
+    function normalizeEntryDateIso(value) {
+      const raw = String(value ?? "").trim();
+      if (!raw) return "";
+
+      const isoMatch = raw.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})$/);
+      if (isoMatch) {
+        const year = isoMatch[1];
+        const month = isoMatch[2].padStart(2, "0");
+        const day = isoMatch[3].padStart(2, "0");
+        return `${year}-${month}-${day}`;
+      }
+
+      const deMatch = raw.match(/^(\d{1,2})[./-](\d{1,2})[./-](\d{4})$/);
+      if (deMatch) {
+        const day = deMatch[1].padStart(2, "0");
+        const month = deMatch[2].padStart(2, "0");
+        const year = deMatch[3];
+        return `${year}-${month}-${day}`;
+      }
+
+      return raw;
+    }
+
     function buildDayEntryGroupKey(entry) {
       const date = String((entry && entry.date) || "").trim();
       const employeeCode = sanitizeEmployeeCode((entry && entry.employeeCode) || "");
@@ -1292,8 +1366,15 @@
 
     function normalizeLoadedDaySharedFields(sourceEntries) {
       const list = Array.isArray(sourceEntries) ? sourceEntries : [];
+      let changed = false;
+      const prepared = list.map((entry) => {
+        if (!entry || typeof entry !== "object") return entry;
+        const normalizedDate = normalizeEntryDateIso(entry.date);
+        if (String(entry.date || "") !== normalizedDate) changed = true;
+        return { ...entry, date: normalizedDate };
+      });
       const latestByGroup = new Map();
-      list.forEach((entry, index) => {
+      prepared.forEach((entry, index) => {
         const key = buildDayEntryGroupKey(entry);
         const stamp = Number(entry && entry.createdAt);
         const order = Number.isFinite(stamp) ? stamp : index;
@@ -1308,8 +1389,7 @@
         }
       });
 
-      let changed = false;
-      const normalized = list.map((entry) => {
+      const normalized = prepared.map((entry) => {
         const key = buildDayEntryGroupKey(entry);
         const shared = latestByGroup.get(key);
         if (!shared) return entry;
@@ -1707,18 +1787,23 @@
     }
 
     function getEntriesForSelectedDay() {
-      return entries.filter((entry) => entry.date === dateInput.value);
+      const selectedDate = normalizeEntryDateIso(dateInput.value);
+      if (!selectedDate) return [];
+      return entries.filter((entry) => normalizeEntryDateIso(entry.date) === selectedDate);
     }
 
     function getEntriesForExport(scope) {
-      const selectedDate = dateInput.value;
+      const selectedDate = normalizeEntryDateIso(dateInput.value);
       if (!selectedDate) return [];
       if (scope === "week") {
         const range = getWeekRangeIso(selectedDate);
         if (!range) return [];
-        return entries.filter((entry) => entry.date >= range.start && entry.date <= range.end);
+        return entries.filter((entry) => {
+          const entryDate = normalizeEntryDateIso(entry.date);
+          return entryDate >= range.start && entryDate <= range.end;
+        });
       }
-      return entries.filter((entry) => entry.date === selectedDate);
+      return entries.filter((entry) => normalizeEntryDateIso(entry.date) === selectedDate);
     }
 
     function parseIsoDateLocal(iso) {
@@ -2189,12 +2274,62 @@
         "customerName",
         sanitizeSubjectPart(customerNameInput.value) || "Unbekannt"
       );
+      const customerNameForSubject = customerNameJoined.length > 60 ? "Mehrere" : customerNameJoined;
 
-      return `${sanitizeEmployeeCode(employeeCode)} ${dateToken} Stundenzettel ${customerNameJoined}`.trim();
+      return `${sanitizeEmployeeCode(employeeCode)} ${dateToken} Stundenzettel ${customerNameForSubject}`.trim();
+    }
+
+    function canUseCompactDayExport(sortedEntries) {
+      if (!Array.isArray(sortedEntries) || sortedEntries.length === 0) return false;
+      const first = sortedEntries[0];
+      const date = sanitizeTsvCell(first.date || "");
+      const employeeCode = sanitizeTsvCell(first.employeeCode || "");
+      const startTime = sanitizeTsvCell(first.startTime || "");
+      const breakMinutes = sanitizeTsvCell(formatBreakMinutesExport(first.breakMinutes));
+      const endTime = sanitizeTsvCell(first.endTime || "");
+      if (!date || !employeeCode) return false;
+      return sortedEntries.every((entry) => (
+        sanitizeTsvCell(entry.date || "") === date
+        && sanitizeTsvCell(entry.employeeCode || "") === employeeCode
+        && sanitizeTsvCell(entry.startTime || "") === startTime
+        && sanitizeTsvCell(formatBreakMinutesExport(entry.breakMinutes)) === breakMinutes
+        && sanitizeTsvCell(entry.endTime || "") === endTime
+      ));
     }
 
     function buildExportTsv(source) {
-      const header = [
+      const rows = [...source]
+        .sort((a, b) => {
+          const byDate = a.date.localeCompare(b.date);
+          if (byDate !== 0) return byDate;
+          return (a.createdAt || 0) - (b.createdAt || 0);
+        });
+
+      if (canUseCompactDayExport(rows)) {
+        const first = rows[0];
+        const dayValues = [
+          sanitizeTsvCell(first.date),
+          sanitizeTsvCell(first.employeeCode),
+          sanitizeTsvCell(first.startTime || ""),
+          sanitizeTsvCell(formatBreakMinutesExport(first.breakMinutes)),
+          sanitizeTsvCell(first.endTime || "")
+        ];
+        const compactRows = rows.map((entry) => [
+          sanitizeTsvCell(entry.customerName),
+          sanitizeTsvCell(entry.projectNumber || "-"),
+          sanitizeTsvCell((entry.costCenter || "").trim() || "-"),
+          sanitizeTsvCell(formatByEffortExport(Boolean(entry.isByEffort))),
+          sanitizeTsvCell(formatHoursExport(entry.hours)),
+          sanitizeTsvCell(entry.activity)
+        ]);
+        return [
+          APP_VERSION,
+          dayValues.join(" "),
+          ...compactRows.map((row) => row.join(" "))
+        ].join("\r\n");
+      }
+
+      const fullHeader = [
         "Datum",
         "Mitarbeiterkürzel",
         "Anfangszeit",
@@ -2207,28 +2342,20 @@
         "Stunden",
         "Tätigkeit"
       ];
-
-      const rows = [...source]
-        .sort((a, b) => {
-          const byDate = a.date.localeCompare(b.date);
-          if (byDate !== 0) return byDate;
-          return (a.createdAt || 0) - (b.createdAt || 0);
-        })
-        .map((entry) => [
-          sanitizeTsvCell(entry.date),
-          sanitizeTsvCell(entry.employeeCode),
-          sanitizeTsvCell(entry.startTime || ""),
-          sanitizeTsvCell(formatBreakMinutesExport(entry.breakMinutes)),
-          sanitizeTsvCell(entry.endTime || ""),
-          sanitizeTsvCell(entry.customerName),
-          sanitizeTsvCell(entry.projectNumber || "-"),
-          sanitizeTsvCell((entry.costCenter || "").trim() || "-"),
-          sanitizeTsvCell(formatByEffortExport(Boolean(entry.isByEffort))),
-          sanitizeTsvCell(formatHoursExport(entry.hours)),
-          sanitizeTsvCell(entry.activity)
-        ]);
-
-      return [header.join("\t"), ...rows.map((row) => row.join("\t"))].join("\r\n");
+      const fullRows = rows.map((entry) => [
+        sanitizeTsvCell(entry.date),
+        sanitizeTsvCell(entry.employeeCode),
+        sanitizeTsvCell(entry.startTime || ""),
+        sanitizeTsvCell(formatBreakMinutesExport(entry.breakMinutes)),
+        sanitizeTsvCell(entry.endTime || ""),
+        sanitizeTsvCell(entry.customerName),
+        sanitizeTsvCell(entry.projectNumber || "-"),
+        sanitizeTsvCell((entry.costCenter || "").trim() || "-"),
+        sanitizeTsvCell(formatByEffortExport(Boolean(entry.isByEffort))),
+        sanitizeTsvCell(formatHoursExport(entry.hours)),
+        sanitizeTsvCell(entry.activity)
+      ]);
+      return [fullHeader.join("\t"), ...fullRows.map((row) => row.join("\t"))].join("\r\n");
     }
 
     function refreshExportDialog(scope) {
@@ -2281,17 +2408,51 @@
       window.prompt("Export kopieren:", currentExportText);
     }
 
-    function openExportMail() {
-      if (!currentExportText) return;
-      const mailto = `mailto:${OFFICE_EMAIL}?subject=${encodeURIComponent(currentExportSubject)}&body=${encodeURIComponent(currentExportText)}`;
-      if (mailto.length > 1800) {
-        alert("Export ist zu lang für den Mail-Link. Bitte 'Inhalt kopieren' verwenden.");
-        return;
+    async function openMailtoWithFallback(subject, body, updateUiFn) {
+      const mailto = `mailto:${OFFICE_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      if (mailto.length <= MAILTO_MAX_LENGTH) {
+        window.location.href = mailto;
+        return true;
       }
-      window.location.href = mailto;
+
+      let copied = false;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        try {
+          await navigator.clipboard.writeText(body);
+          copied = true;
+        } catch {
+          copied = false;
+        }
+      }
+
+      const fallbackBody = copied
+        ? "Der vollständige Stundenzettel wurde in die Zwischenablage kopiert. Bitte hier einfügen."
+        : "Der vollständige Stundenzettel ist zu lang für den Direktversand auf diesem Gerät. Bitte Export öffnen und Inhalt kopieren.";
+      const fallbackMailto = `mailto:${OFFICE_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(fallbackBody)}`;
+      window.location.href = fallbackMailto;
+
+      if (copied) {
+        if (typeof updateUiFn === "function") {
+          updateUiFn("Mailtext war zu lang. Volltext wurde in die Zwischenablage kopiert.");
+        }
+        alert("Mailtext war zu lang für den Direktversand. Der Volltext wurde in die Zwischenablage kopiert. Bitte in die geöffnete Mail einfügen.");
+      } else {
+        if (typeof updateUiFn === "function") {
+          updateUiFn("Mailtext war zu lang. Bitte Export öffnen und Inhalt kopieren.");
+        }
+        alert("Mailtext war zu lang für den Direktversand und konnte nicht automatisch kopiert werden. Bitte 'Export öffnen' und dann 'Inhalt kopieren' nutzen.");
+      }
+      return false;
     }
 
-    function sendSimpleMailForDay() {
+    async function openExportMail() {
+      if (!currentExportText) return;
+      await openMailtoWithFallback(currentExportSubject, currentExportText, (message) => {
+        exportMeta.textContent = message;
+      });
+    }
+
+    async function sendSimpleMailForDay() {
       const dayEntries = getEntriesForExport("day");
       const draftEntry = buildDraftEntryFromInputs();
       const exportEntries = dayEntries.length > 0
@@ -2308,12 +2469,9 @@
 
       const subject = getExportSubject("day", exportEntries);
       const body = buildExportTsv(exportEntries);
-      const mailto = `mailto:${OFFICE_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      if (mailto.length > 1800) {
-        alert("Mailtext ist zu lang. Bitte Tagesdaten reduzieren.");
-        return;
-      }
-      window.location.href = mailto;
+      await openMailtoWithFallback(subject, body, (message) => {
+        setFormMessage(message, false);
+      });
     }
 
     form.addEventListener("submit", (event) => {
@@ -2335,7 +2493,7 @@
         const entry = {
           id: generateId(),
           createdAt: Date.now(),
-          date: dateInput.value,
+          date: normalizeEntryDateIso(dateInput.value),
           employeeCode: sanitizeEmployeeCode(employeeCodeInput.value),
           startTime: startTimeInput.value,
           endTime: endTimeInput.value,
