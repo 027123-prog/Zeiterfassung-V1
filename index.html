@@ -974,7 +974,7 @@
   </div>
 
   <script>
-    const APP_VERSION = "V1.2";
+    const APP_VERSION = "V1.3";
     const STORAGE_KEY = "time_entries_mail_v4";
     const LEGACY_STORAGE_KEYS = ["time_entries_mail_v3", "time_entries_mail_v2", "time_entries_mail_v1", "time_entries_mail"];
     const MAILTO_MAX_LENGTH = 1800;
@@ -2452,6 +2452,62 @@
       });
     }
 
+    function evaluateDayForSending(exportEntries) {
+      if (!Array.isArray(exportEntries) || exportEntries.length === 0) {
+        return { ok: false, message: "Keine Einträge zum Senden vorhanden." };
+      }
+
+      let hasInvalidHours = false;
+      let enteredHours = 0;
+
+      exportEntries.forEach((entry) => {
+        const hours = Number(entry && entry.hours);
+        if (!Number.isFinite(hours) || hours <= 0) {
+          hasInvalidHours = true;
+        } else {
+          enteredHours += hours;
+        }
+      });
+
+      if (hasInvalidHours) {
+        return { ok: false, message: "Versand gesperrt: Mindestens eine Zeile hat ungültige Stunden." };
+      }
+
+      const start = String(startTimeInput.value || "").trim();
+      const end = String(endTimeInput.value || "").trim();
+      if (!start || !end) {
+        return { ok: false, message: "Versand gesperrt: Anfangszeit und Endzeit sind Pflicht." };
+      }
+
+      const breakRaw = String(breakMinutesInput.value || "").trim();
+      if (!isValidBreakMinutesText(breakRaw)) {
+        return { ok: false, message: "Versand gesperrt: Pause nur als ganze Minuten eingeben (z. B. 45)." };
+      }
+
+      const breakMinutes = parseBreakMinutes(breakRaw);
+      if (!Number.isFinite(breakMinutes) || breakMinutes < 0 || !Number.isInteger(breakMinutes)) {
+        return { ok: false, message: "Versand gesperrt: Pause ist ungültig." };
+      }
+
+      const expectedHours = calcExpectedHours(start, end, breakMinutes);
+      if (!Number.isFinite(expectedHours)) {
+        return { ok: false, message: "Versand gesperrt: Tagesdaten sind nicht plausibel (Anfang, Ende, Pause)." };
+      }
+
+      const diff = enteredHours - expectedHours;
+      const tolerance = 0.01;
+      if (Math.abs(diff) > tolerance) {
+        const delta = fmtHours(Math.abs(diff));
+        const direction = diff < 0 ? "fehlen" : "zu viel";
+        return {
+          ok: false,
+          message: `Versand gesperrt: Tag passt nicht. Soll ${fmtHours(expectedHours)} h, Eingetragen ${fmtHours(enteredHours)} h (${delta} h ${direction}).`
+        };
+      }
+
+      return { ok: true };
+    }
+
     async function sendSimpleMailForDay() {
       const dayEntries = getEntriesForExport("day");
       const draftEntry = buildDraftEntryFromInputs();
@@ -2464,6 +2520,13 @@
         alert("Bitte Mitarbeiterkürzel ausfüllen, bevor du sendest.");
         employeeCodeInput.focus();
         employeeCodeInput.select();
+        return;
+      }
+
+      const dayCheck = evaluateDayForSending(exportEntries);
+      if (!dayCheck.ok) {
+        setFormMessage(dayCheck.message, true);
+        alert(dayCheck.message);
         return;
       }
 
