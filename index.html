@@ -974,7 +974,7 @@
   </div>
 
   <script>
-    const APP_VERSION = "V1.3";
+    const APP_VERSION = "V1.4";
     const STORAGE_KEY = "time_entries_mail_v4";
     const LEGACY_STORAGE_KEYS = ["time_entries_mail_v3", "time_entries_mail_v2", "time_entries_mail_v1", "time_entries_mail"];
     const MAILTO_MAX_LENGTH = 1800;
@@ -2459,8 +2459,32 @@
 
       let hasInvalidHours = false;
       let enteredHours = 0;
+      const startValues = new Set();
+      const endValues = new Set();
+      const breakValues = new Set();
+      let hasInvalidRowBreak = false;
 
       exportEntries.forEach((entry) => {
+        const rowStart = String((entry && entry.startTime) || "").trim();
+        const rowEnd = String((entry && entry.endTime) || "").trim();
+        startValues.add(rowStart);
+        endValues.add(rowEnd);
+
+        const rowBreakRaw = String((entry && entry.breakMinutes) ?? "").trim();
+        let rowBreak = NaN;
+        if (/^\d+$/.test(rowBreakRaw)) {
+          rowBreak = Number(rowBreakRaw);
+        } else if (rowBreakRaw !== "" && /^\d+[.,]\d+$/.test(rowBreakRaw)) {
+          rowBreak = normalizeBreakMinutesValue(rowBreakRaw);
+        } else if (rowBreakRaw === "") {
+          rowBreak = 0;
+        }
+        if (!Number.isFinite(rowBreak) || rowBreak < 0 || !Number.isInteger(rowBreak)) {
+          hasInvalidRowBreak = true;
+        } else {
+          breakValues.add(rowBreak);
+        }
+
         const hours = Number(entry && entry.hours);
         if (!Number.isFinite(hours) || hours <= 0) {
           hasInvalidHours = true;
@@ -2473,21 +2497,17 @@
         return { ok: false, message: "Versand gesperrt: Mindestens eine Zeile hat ungültige Stunden." };
       }
 
-      const start = String(startTimeInput.value || "").trim();
-      const end = String(endTimeInput.value || "").trim();
+      if (startValues.size !== 1 || endValues.size !== 1 || breakValues.size !== 1 || hasInvalidRowBreak) {
+        return { ok: false, message: "Versand gesperrt: Tagesdaten in den Zeilen sind uneinheitlich oder ungültig." };
+      }
+
+      const start = [...startValues][0];
+      const end = [...endValues][0];
       if (!start || !end) {
         return { ok: false, message: "Versand gesperrt: Anfangszeit und Endzeit sind Pflicht." };
       }
 
-      const breakRaw = String(breakMinutesInput.value || "").trim();
-      if (!isValidBreakMinutesText(breakRaw)) {
-        return { ok: false, message: "Versand gesperrt: Pause nur als ganze Minuten eingeben (z. B. 45)." };
-      }
-
-      const breakMinutes = parseBreakMinutes(breakRaw);
-      if (!Number.isFinite(breakMinutes) || breakMinutes < 0 || !Number.isInteger(breakMinutes)) {
-        return { ok: false, message: "Versand gesperrt: Pause ist ungültig." };
-      }
+      const breakMinutes = [...breakValues][0];
 
       const expectedHours = calcExpectedHours(start, end, breakMinutes);
       if (!Number.isFinite(expectedHours)) {
