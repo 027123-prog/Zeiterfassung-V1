@@ -974,7 +974,8 @@
   </div>
 
   <script>
-    const APP_VERSION = "V1.4";
+    const APP_VERSION = "V1.6";
+    const EXPORT_ROW_END_MARKER = "#RS#";
     const STORAGE_KEY = "time_entries_mail_v4";
     const LEGACY_STORAGE_KEYS = ["time_entries_mail_v3", "time_entries_mail_v2", "time_entries_mail_v1", "time_entries_mail"];
     const MAILTO_MAX_LENGTH = 1800;
@@ -2015,6 +2016,20 @@
       return value ? "Ja" : "Nein";
     }
 
+    function computeExportTotalHours(entries) {
+      if (!Array.isArray(entries) || entries.length === 0) return 0;
+      return entries.reduce((sum, entry) => {
+        const value = Number(entry && entry.hours);
+        return sum + (Number.isFinite(value) ? value : 0);
+      }, 0);
+    }
+
+    function appendExportRowEndMarker(activity) {
+      const cleanActivity = sanitizeTsvCell(activity);
+      if (!cleanActivity) return EXPORT_ROW_END_MARKER;
+      return `${cleanActivity} ${EXPORT_ROW_END_MARKER}`;
+    }
+
     function formatIsoToGerman(isoDate) {
       if (!/^\d{4}-\d{2}-\d{2}$/.test(String(isoDate || ""))) return String(isoDate || "");
       const parts = String(isoDate).split("-");
@@ -2304,6 +2319,7 @@
           if (byDate !== 0) return byDate;
           return (a.createdAt || 0) - (b.createdAt || 0);
         });
+      const controlHours = sanitizeTsvCell(formatHoursExport(computeExportTotalHours(rows)));
 
       if (canUseCompactDayExport(rows)) {
         const first = rows[0];
@@ -2312,7 +2328,8 @@
           sanitizeTsvCell(first.employeeCode),
           sanitizeTsvCell(first.startTime || ""),
           sanitizeTsvCell(formatBreakMinutesExport(first.breakMinutes)),
-          sanitizeTsvCell(first.endTime || "")
+          sanitizeTsvCell(first.endTime || ""),
+          controlHours
         ];
         const compactRows = rows.map((entry) => [
           sanitizeTsvCell(entry.customerName),
@@ -2320,7 +2337,7 @@
           sanitizeTsvCell((entry.costCenter || "").trim() || "-"),
           sanitizeTsvCell(formatByEffortExport(Boolean(entry.isByEffort))),
           sanitizeTsvCell(formatHoursExport(entry.hours)),
-          sanitizeTsvCell(entry.activity)
+          appendExportRowEndMarker(entry.activity)
         ]);
         return [
           APP_VERSION,
@@ -2353,7 +2370,7 @@
         sanitizeTsvCell((entry.costCenter || "").trim() || "-"),
         sanitizeTsvCell(formatByEffortExport(Boolean(entry.isByEffort))),
         sanitizeTsvCell(formatHoursExport(entry.hours)),
-        sanitizeTsvCell(entry.activity)
+        appendExportRowEndMarker(entry.activity)
       ]);
       return [fullHeader.join("\t"), ...fullRows.map((row) => row.join("\t"))].join("\r\n");
     }
