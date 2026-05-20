@@ -974,8 +974,17 @@
   </div>
 
   <script>
-    const APP_VERSION = "V1.6";
+    const APP_VERSION = "V1.8";
     const EXPORT_ROW_END_MARKER = "#RS#";
+    const EXPORT_FIELD_MARKERS = {
+      rowStart: "#Z#",
+      customerName: "#K#",
+      projectNumber: "#V#",
+      costCenter: "#S#",
+      isByEffort: "#N#",
+      hours: "#H#",
+      activity: "#T#"
+    };
     const STORAGE_KEY = "time_entries_mail_v4";
     const LEGACY_STORAGE_KEYS = ["time_entries_mail_v3", "time_entries_mail_v2", "time_entries_mail_v1", "time_entries_mail"];
     const MAILTO_MAX_LENGTH = 1800;
@@ -2332,17 +2341,18 @@
           controlHours
         ];
         const compactRows = rows.map((entry) => [
-          sanitizeTsvCell(entry.customerName),
-          sanitizeTsvCell(entry.projectNumber || "-"),
-          sanitizeTsvCell((entry.costCenter || "").trim() || "-"),
-          sanitizeTsvCell(formatByEffortExport(Boolean(entry.isByEffort))),
-          sanitizeTsvCell(formatHoursExport(entry.hours)),
-          appendExportRowEndMarker(entry.activity)
-        ]);
+          EXPORT_FIELD_MARKERS.rowStart,
+          `${EXPORT_FIELD_MARKERS.customerName}${sanitizeTsvCell(entry.customerName)}`,
+          `${EXPORT_FIELD_MARKERS.projectNumber}${sanitizeTsvCell(entry.projectNumber || "")}`,
+          `${EXPORT_FIELD_MARKERS.costCenter}${sanitizeTsvCell((entry.costCenter || "").trim())}`,
+          `${EXPORT_FIELD_MARKERS.isByEffort}${sanitizeTsvCell(formatByEffortExport(Boolean(entry.isByEffort)))}`,
+          `${EXPORT_FIELD_MARKERS.hours}${sanitizeTsvCell(formatHoursExport(entry.hours))}`,
+          `${EXPORT_FIELD_MARKERS.activity}${appendExportRowEndMarker(entry.activity)}`
+        ].join(""));
         return [
           APP_VERSION,
           dayValues.join(" "),
-          ...compactRows.map((row) => row.join(" "))
+          ...compactRows
         ].join("\r\n");
       }
 
