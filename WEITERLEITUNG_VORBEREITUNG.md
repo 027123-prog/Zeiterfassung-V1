@@ -1,25 +1,50 @@
 # Weiterleitung der alten Stundenerfassung
 
-Stand: 03.08.2026
+Stand: 11.08.2026
 
-Die Startseite dieses GitHub-Pages-Repositories leitet den bisherigen Link
+Die Startseite dieses GitHub-Pages-Repositories ist der bekannte Stundenlink:
 
 `https://027123-prog.github.io/Zeiterfassung-V1/`
 
-sofort auf die neue mobile Stundenerfassung weiter:
+Produktiv leitet `main` derzeit weiterhin auf die oeffentliche mobile
+Stundenerfassung:
 
 `https://stundeneingabe-next-gen-test.onrender.com/mobile-supabase-preview`
 
+Auf dem Vorbereitungsbranch wird als neues Ziel das geschuetzte
+Mitarbeiterportal hinterlegt:
+
+`https://stundeneingabe-next-gen-test.onrender.com/mitarbeiter`
+
+Wer dort keine gueltige Sitzung besitzt, wird von der Anwendung automatisch
+nach `/mitarbeiter-login` gefuehrt. Bereits angemeldete Mitarbeiter landen
+direkt bei der Erfassung mit ihrer Monatsansicht.
+
+## Freigabebedingungen
+
+Den Vorbereitungsbranch nicht in `main` uebernehmen, bevor alle folgenden
+Punkte erfolgreich abgeschlossen sind:
+
+1. Mitarbeiterportal in `Zeiterfassung-Next-Gen` nach `main` uebernehmen und
+   das Render-Deployment abwarten.
+2. Migration `010_employee_login.sql` nach ausdruecklicher Freigabe live
+   anwenden.
+3. Alle zwoelf aktiven Mitarbeiterkonten transaktional aktivieren.
+4. Login, persoenliche Monatsansicht, Tagesansicht und Abmeldung mit einem
+   echten Mitarbeiterkonto pruefen.
+5. Das dokumentierte Parallel-Schreibrisiko beheben oder bewusst akzeptieren.
+
+Bis dahin bleibt die produktive GitHub-Pages-Weiterleitung unveraendert.
+
 ## Umsetzung
 
-- Die produktive Umschaltung auf das neue System wurde zum Monatswechsel am
-  03.08.2026 freigegeben.
 - Nur `index.html` wird zur Weiterleitungsseite.
 - `office_mail_viewer.html` und die uebrigen Bestandsdateien bleiben
   unveraendert.
-- Die neue Ziel-App wurde vor der Aktivierung ueber `/api/health` geprueft.
 - Die Zieladresse bleibt als sichtbarer Link erhalten, falls eine automatische
   Weiterleitung im Browser blockiert wird.
+- In `index.html` muessen Meta-Refresh, Canonical-Link, JavaScript-Weiterleitung
+  und sichtbarer Link immer dasselbe Ziel enthalten.
 
 ## Rueckfallebenen
 
@@ -31,6 +56,10 @@ sofort auf die neue mobile Stundenerfassung weiter:
 
 ## Rueckfall
 
-Der vorherige Inhalt von `index.html` bleibt vollstaendig in der
-Git-Historie erhalten. Bei Problemen kann der Weiterleitungs-Commit gezielt
-zurueckgenommen und die alte Startseite erneut veroeffentlicht werden.
+Bei Problemen wird der bekannte Stundenlink wieder auf den zuletzt stabilen
+oeffentlichen Mobilweg gesetzt:
+
+`https://stundeneingabe-next-gen-test.onrender.com/mobile-supabase-preview`
+
+Der vorherige Inhalt von `index.html` bleibt ausserdem vollstaendig in der
+Git-Historie erhalten.
